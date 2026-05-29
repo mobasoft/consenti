@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Consenti\Consenti\Middleware;
+namespace Mobasoft\Consenti\Middleware;
 
 use DOMDocument;
 use DOMElement;

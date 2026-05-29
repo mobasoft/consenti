@@ -1,11 +1,11 @@
 {
-  "name": "consenti/consenti",
+  "name": "mobasoft/consenti",
   "description": "Custom TYPO3 cookie consent extension",
   "type": "typo3-cms-extension",
   "license": "GPL-2.0-or-later",
   "autoload": {
     "psr-4": {
-      "Consenti\\Consenti\\": "Classes/"
+      "Mobasoft\\Consenti\\": "Classes/"
     }
   },
   "require": {
