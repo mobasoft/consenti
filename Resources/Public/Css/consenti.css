@@ -46,3 +46,66 @@
   background: var(--consenti-primary, #0d6efd);
   color: #ffffff;
 }
+
+.consenti-fab {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 9990;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--consenti-primary, #0d6efd);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--consenti-primary, #0d6efd);
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.consenti-embed-placeholder {
+  border: 1px solid color-mix(in srgb, var(--bs-body-color, #212529) 20%, transparent);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 0.5rem 0;
+  background: color-mix(in srgb, var(--bs-body-bg, #ffffff) 90%, var(--bs-body-color, #212529) 10%);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    color-mix(in srgb, var(--bs-body-color, #212529) 10%, transparent) 0,
+    color-mix(in srgb, var(--bs-body-color, #212529) 10%, transparent) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+  color: var(--bs-body-color, #212529);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.consenti-embed-message {
+  margin: 0 0 0.75rem 0;
+}
+
+.consenti-embed-placeholder {
+  gap: 0.5rem;
+}
+
+.consenti-embed-action,
+.consenti-embed-settings {
+  border: 1px solid var(--bs-primary, #0d6efd);
+  border-radius: 6px;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+  margin: 0;
+}
+
+.consenti-embed-action {
+  background: var(--bs-primary, #0d6efd);
+  color: #ffffff;
+}
+
+.consenti-embed-settings {
+  background: var(--bs-body-bg, #ffffff);
+  color: var(--bs-primary, #0d6efd);
+}

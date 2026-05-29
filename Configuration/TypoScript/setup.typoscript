@@ -7,11 +7,30 @@ page {
     consenti = EXT:consenti/Resources/Public/JavaScript/consenti.js
   }
 
-  footerData.9910 = TEXT
-  footerData.9910.value (
-    <div id="consenti-root"
-         data-cookie-name="{$plugin.tx_consenti.cookieName}"
-         data-privacy-url="{$plugin.tx_consenti.privacyUrl}"
-         data-position="{$plugin.tx_consenti.position}"></div>
-  )
+  footerData.9910 = COA
+  footerData.9910 {
+    10 = TEXT
+    10.value (
+      <div id="consenti-root"
+           data-cookie-name="{$plugin.tx_consenti.cookieName}"
+           data-privacy-url="
+    )
+
+    20 = TEXT
+    20.value = {$plugin.tx_consenti.privacyUrl}
+    20.typolink {
+      parameter = {$plugin.tx_consenti.privacyUrl}
+      returnLast = url
+    }
+
+    30 = TEXT
+    30.value (
+      "
+      data-position="{$plugin.tx_consenti.position}"
+      data-fab-position="{$plugin.tx_consenti.fab.position}"
+      data-fab-bottom="{$plugin.tx_consenti.fab.bottom}"
+      data-fab-offset-x="{$plugin.tx_consenti.fab.offsetX}"
+      data-fab-z-index="{$plugin.tx_consenti.fab.zIndex}"></div>
+    )
+  }
 }

@@ -27,7 +27,7 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
         }
 
         $html = (string)$response->getBody();
-        if ($html === '' || stripos($html, '<script') === false) {
+        if ($html === '' || (stripos($html, '<script') === false && stripos($html, '<iframe') === false)) {
             return $response;
         }
 
@@ -46,6 +46,12 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
             }
             $this->maybeBlockScript($script, $host, $consent);
         }
+        foreach ($dom->getElementsByTagName('iframe') as $iframe) {
+            if (!$iframe instanceof DOMElement) {
+                continue;
+            }
+            $this->maybeBlockIframe($iframe, $host, $consent);
+        }
 
         $updated = $dom->saveHTML();
         if (!is_string($updated) || $updated === '') {
@@ -55,6 +61,78 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
         $response->getBody()->rewind();
         $response->getBody()->write($updated);
         return $response;
+    }
+
+    private function maybeBlockIframe(DOMElement $iframe, string $currentHost, array $consent): void
+    {
+        if ($iframe->hasAttribute('data-consenti-ignore')) {
+            return;
+        }
+        $src = trim($iframe->getAttribute('src'));
+        if ($src === '') {
+            return;
+        }
+        if (!$this->isExternalSource($src, $currentHost)) {
+            return;
+        }
+
+        $category = $this->detectCategory($src);
+        if (!empty($consent[$category])) {
+            return;
+        }
+
+        $iframe->setAttribute('data-consenti-src', $src);
+        $iframe->setAttribute('data-consenti-category', $category);
+        $iframe->setAttribute('data-consenti-blocked', '1');
+        $iframe->setAttribute('style', trim($iframe->getAttribute('style') . ';display:none;'));
+        $iframe->removeAttribute('src');
+
+        $placeholder = $iframe->ownerDocument->createElement('div');
+        $placeholder->setAttribute('class', 'consenti-embed-placeholder');
+        $placeholder->setAttribute('data-consenti-placeholder', '1');
+        $placeholder->setAttribute('data-consenti-category', $category);
+        $placeholder->setAttribute('style', $this->buildPlaceholderStyle($iframe));
+
+        $message = $iframe->ownerDocument->createElement(
+            'p',
+            sprintf(
+                'Dieser Inhalt ist blockiert, bis "%s" erlaubt ist.',
+                $category === 'marketing' ? 'Marketing' : 'Statistik'
+            )
+        );
+        $message->setAttribute('class', 'consenti-embed-message');
+        $placeholder->appendChild($message);
+
+        $allowButton = $iframe->ownerDocument->createElement('button', $category === 'marketing' ? 'Inhalt laden (Marketing)' : 'Inhalt laden (Statistik)');
+        $allowButton->setAttribute('type', 'button');
+        $allowButton->setAttribute('class', 'consenti-embed-action');
+        $allowButton->setAttribute('data-consenti-allow-category', $category);
+        $placeholder->appendChild($allowButton);
+
+        $settingsButton = $iframe->ownerDocument->createElement('button', 'Cookie-Einstellungen');
+        $settingsButton->setAttribute('type', 'button');
+        $settingsButton->setAttribute('class', 'consenti-embed-settings');
+        $settingsButton->setAttribute('data-consenti-open-settings', '1');
+        $placeholder->appendChild($settingsButton);
+
+        $iframe->parentNode?->insertBefore($placeholder, $iframe->nextSibling);
+    }
+
+    private function buildPlaceholderStyle(DOMElement $iframe): string
+    {
+        $styles = ['width:100%', 'min-height:220px'];
+
+        $width = trim($iframe->getAttribute('width'));
+        if ($width !== '') {
+            $styles[] = 'width:' . (ctype_digit($width) ? $width . 'px' : $width);
+        }
+
+        $height = trim($iframe->getAttribute('height'));
+        if ($height !== '') {
+            $styles[] = 'min-height:' . (ctype_digit($height) ? $height . 'px' : $height);
+        }
+
+        return implode(';', $styles) . ';';
     }
 
     private function maybeBlockScript(DOMElement $script, string $currentHost, array $consent): void

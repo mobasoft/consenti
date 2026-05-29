@@ -1,5 +1,24 @@
-plugin.tx_consenti {
-  cookieName = consenti_consent
-  privacyUrl = /datenschutz
-  position = bottom
-}
+# customsubcategory=01_General=General
+# customsubcategory=02_Banner=Banner
+# customsubcategory=03_FloatingButton=Floating Button
+
+# cat=Consenti/01_General/10; type=string; label=Cookie name
+plugin.tx_consenti.cookieName = consenti_consent
+
+# cat=Consenti/01_General/20; type=string; label=Privacy URL or page uid
+plugin.tx_consenti.privacyUrl = /datenschutz
+
+# cat=Consenti/02_Banner/10; type=options[bottom,top]; label=Banner position
+plugin.tx_consenti.position = bottom
+
+# cat=Consenti/03_FloatingButton/10; type=options[left,center,right]; label=Floating button position
+plugin.tx_consenti.fab.position = left
+
+# cat=Consenti/03_FloatingButton/20; type=string; label=Floating button bottom offset (e.g. 1rem)
+plugin.tx_consenti.fab.bottom = 1rem
+
+# cat=Consenti/03_FloatingButton/30; type=string; label=Floating button horizontal offset (left/right)
+plugin.tx_consenti.fab.offsetX = 1rem
+
+# cat=Consenti/03_FloatingButton/40; type=int+; label=Floating button z-index
+plugin.tx_consenti.fab.zIndex = 9990
