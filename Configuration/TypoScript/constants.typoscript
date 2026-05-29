@@ -1,0 +1,5 @@
+plugin.tx_consenti {
+  cookieName = consenti_consent
+  privacyUrl = /datenschutz
+  position = bottom
+}

@@ -1,0 +1,48 @@
+.consenti-banner {
+  position: fixed;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 10000;
+  background: var(--consenti-bg, #ffffff);
+  color: var(--consenti-text, #212529);
+  border: 1px solid color-mix(in srgb, var(--consenti-text, #212529) 20%, transparent);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  padding: 1rem;
+  max-width: 980px;
+  margin: 0 auto;
+  font-size: 0.95rem;
+}
+
+.consenti-text a {
+  color: var(--consenti-primary, #0d6efd);
+}
+
+.consenti-options {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.8rem;
+}
+
+.consenti-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.9rem;
+}
+
+.consenti-actions button {
+  border: 1px solid var(--consenti-primary, #0d6efd);
+  background: transparent;
+  color: var(--consenti-primary, #0d6efd);
+  border-radius: 6px;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+}
+
+.consenti-actions button[data-consenti-action="all"] {
+  background: var(--consenti-primary, #0d6efd);
+  color: #ffffff;
+}

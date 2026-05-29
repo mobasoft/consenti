@@ -1,0 +1,20 @@
+{
+  "name": "consenti/consenti",
+  "description": "Custom TYPO3 cookie consent extension",
+  "type": "typo3-cms-extension",
+  "license": "GPL-2.0-or-later",
+  "autoload": {
+    "psr-4": {
+      "Consenti\\Consenti\\": "Classes/"
+    }
+  },
+  "require": {
+    "typo3/cms-core": "^13.4 || ^14.0",
+    "typo3/cms-frontend": "^13.4 || ^14.0"
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "consenti"
+    }
+  }
+}

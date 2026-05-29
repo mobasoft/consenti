@@ -1,0 +1,17 @@
+page {
+  includeCSS {
+    consenti = EXT:consenti/Resources/Public/Css/consenti.css
+  }
+
+  includeJSFooter {
+    consenti = EXT:consenti/Resources/Public/JavaScript/consenti.js
+  }
+
+  footerData.9910 = TEXT
+  footerData.9910.value (
+    <div id="consenti-root"
+         data-cookie-name="{$plugin.tx_consenti.cookieName}"
+         data-privacy-url="{$plugin.tx_consenti.privacyUrl}"
+         data-position="{$plugin.tx_consenti.position}"></div>
+  )
+}
