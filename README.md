@@ -4,8 +4,8 @@ Custom TYPO3 cookie-consent extension for project-specific requirements.
 
 ## Version Scope
 
-- Current mainline target: **TYPO3 13** (`^13.4`)
-- TYPO3 14 support is planned in a dedicated later branch (`v14`).
+- Current target: **TYPO3 14** (`^14.0`)
+- This branch is the TYPO3 14 line (`v14`).
 
 ## Current Feature Set (v1)
 
@@ -71,9 +71,12 @@ Custom TYPO3 cookie-consent extension for project-specific requirements.
 2. Require/update dependencies:
    - `composer dump-autoload`
 3. Activate extension in TYPO3 backend (`Admin Tools > Extensions`) or via CLI.
-4. Include static TypoScript template:
+4. Add Site Set in TYPO3 14:
+   - **Site Management > Sites > [your site] > Sets**
+   - add **consenti** (`mobasoft/consenti`)
+5. (Legacy fallback) Include static TypoScript template:
    - **consenti**
-5. Run database schema update (new tables for service rules and source discoveries).
+6. Run database schema update (new tables for service rules and source discoveries).
 
 ## Configuration
 
