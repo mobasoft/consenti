@@ -15,11 +15,7 @@ page {
   footerData.9910 = COA
   footerData.9910 {
     10 = TEXT
-    10.value (
-      <div id="consenti-root"
-           data-cookie-name="{$plugin.tx_consenti.cookieName}"
-           data-privacy-url="
-    )
+    10.value = <div id="consenti-root" data-cookie-name="{$plugin.tx_consenti.cookieName}" data-privacy-url="
 
     20 = TEXT
     20.value = {$plugin.tx_consenti.privacyUrl}
@@ -27,17 +23,11 @@ page {
       parameter = {$plugin.tx_consenti.privacyUrl}
       returnLast = url
     }
+    20.stdWrap.trim = 1
+    20.stdWrap.ifEmpty = /datenschutz
 
     30 = TEXT
-    30.value (
-      "
-      data-position="{$plugin.tx_consenti.position}"
-      data-fab-position="{$plugin.tx_consenti.fab.position}"
-      data-fab-bottom="{$plugin.tx_consenti.fab.bottom}"
-      data-fab-offset-x="{$plugin.tx_consenti.fab.offsetX}"
-      data-fab-z-index="{$plugin.tx_consenti.fab.zIndex}"
-      data-l10n-banner-text="
-    )
+    30.value = " data-position="{$plugin.tx_consenti.position}" data-fab-position="{$plugin.tx_consenti.fab.position}" data-fab-bottom="{$plugin.tx_consenti.fab.bottom}" data-fab-offset-x="{$plugin.tx_consenti.fab.offsetX}" data-fab-z-index="{$plugin.tx_consenti.fab.zIndex}" data-l10n-banner-text="
 
     40 = TEXT
     40.data = LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:consent.banner.text

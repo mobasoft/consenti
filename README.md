@@ -149,6 +149,22 @@ Stored fields:
 - `decision` (`blocked`, `consented`, `whitelist`, `blacklist`)
 - `hits`, `first_seen`, `last_seen`, `last_source_url`
 
+Cleanup command:
+
+```bash
+# Delete discoveries older than 90 days (default)
+ddev typo3 consenti:discovery:cleanup
+
+# Preview only
+ddev typo3 consenti:discovery:cleanup --dry-run
+
+# Custom threshold
+ddev typo3 consenti:discovery:cleanup --days=30
+
+# Remove all discovery records
+ddev typo3 consenti:discovery:cleanup --all
+```
+
 ## Roadmap
 
 ### Stage 1: MVP (done)
