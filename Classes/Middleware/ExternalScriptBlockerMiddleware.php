@@ -6,6 +6,7 @@ namespace Mobasoft\Consenti\Middleware;
 
 use DOMDocument;
 use DOMElement;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Psr\Http\Message\ResponseInterface;
@@ -14,6 +15,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Http\StreamFactory;
+use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
@@ -35,6 +37,11 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
      */
     private array $scannerRows = [];
 
+    /**
+     * @var array<string, mixed>
+     */
+    private array $flatSettings = [];
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);
@@ -42,6 +49,7 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
         if (stripos($contentType, 'text/html') === false) {
             return $response;
         }
+        $this->initializeRuntimeSettings($request);
 
         $consent = $this->getConsentFromCookie($request);
         $consent = $this->validateConsentRevision($consent);
@@ -85,6 +93,21 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
         return $response->withBody(
             GeneralUtility::makeInstance(StreamFactory::class)->createStream($updated)
         );
+    }
+
+    private function initializeRuntimeSettings(ServerRequestInterface $request): void
+    {
+        $this->flatSettings = [];
+        $frontendTypoScript = $request->getAttribute('frontend.typoscript');
+        if ($frontendTypoScript instanceof FrontendTypoScript) {
+            $this->flatSettings = $frontendTypoScript->getFlatSettings();
+        }
+    }
+
+    private function getFlatSettingString(string $key): string
+    {
+        $value = $this->flatSettings[$key] ?? '';
+        return trim((string)$value);
     }
 
     private function maybeBlockIframe(DOMElement $iframe, string $currentHost, array $consent, bool $allConsented): void
@@ -271,7 +294,7 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
             $queryBuilder->andWhere(
                 $queryBuilder->expr()->in(
                     'pid',
-                    $queryBuilder->createNamedParameter($storagePids, Connection::PARAM_INT_ARRAY)
+                    $queryBuilder->createNamedParameter($storagePids, ArrayParameterType::INTEGER)
                 )
             );
         }
@@ -372,6 +395,7 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
                     ->where(
                         $queryBuilder->expr()->eq('deleted', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)),
                         $queryBuilder->expr()->eq('hidden', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)),
+                        $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid, ParameterType::INTEGER)),
                         $queryBuilder->expr()->eq('host', $queryBuilder->createNamedParameter($row['host'])),
                         $queryBuilder->expr()->eq('category', $queryBuilder->createNamedParameter($row['category'])),
                         $queryBuilder->expr()->eq('source_type', $queryBuilder->createNamedParameter($row['sourceType']))
@@ -423,6 +447,11 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
 
     private function getLoggingPid(): int
     {
+        $loggingPid = (int)$this->getFlatSettingString('plugin.tx_consenti.loggingPid');
+        if ($loggingPid > 0) {
+            return $loggingPid;
+        }
+
         if (!isset($GLOBALS['TSFE']) || !is_object($GLOBALS['TSFE']) || !isset($GLOBALS['TSFE']->tmpl)) {
             return 0;
         }
@@ -448,6 +477,16 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
      */
     private function getConfiguredStoragePids(): array
     {
+        $rawFromSettings = $this->getFlatSettingString('plugin.tx_consenti.storagePid');
+        if ($rawFromSettings !== '') {
+            $parts = preg_split('/[\s,]+/', $rawFromSettings, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+            $pids = array_map('intval', $parts);
+            $pids = array_values(array_filter($pids, static fn(int $pid): bool => $pid > 0));
+            $pids = array_values(array_unique($pids));
+            if ($pids !== []) {
+                return $pids;
+            }
+        }
         if (!isset($GLOBALS['TSFE']) || !is_object($GLOBALS['TSFE']) || !isset($GLOBALS['TSFE']->tmpl)) {
             return [];
         }
@@ -509,6 +548,10 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
 
     private function getConfiguredCookieName(): string
     {
+        $cookieNameFromSettings = $this->getFlatSettingString('plugin.tx_consenti.cookieName');
+        if ($cookieNameFromSettings !== '') {
+            return $cookieNameFromSettings;
+        }
         if (!isset($GLOBALS['TSFE']) || !is_object($GLOBALS['TSFE']) || !isset($GLOBALS['TSFE']->tmpl)) {
             return 'consenti_consent';
         }
@@ -538,6 +581,10 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
 
     private function getConfiguredConsentRevision(): string
     {
+        $revisionFromSettings = $this->getFlatSettingString('plugin.tx_consenti.consentRevision');
+        if ($revisionFromSettings !== '') {
+            return $revisionFromSettings;
+        }
         if (!isset($GLOBALS['TSFE']) || !is_object($GLOBALS['TSFE']) || !isset($GLOBALS['TSFE']->tmpl)) {
             return '';
         }
@@ -550,6 +597,10 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
 
     private function isForceReconsentOnRevisionChangeEnabled(): bool
     {
+        $forceSetting = $this->getFlatSettingString('plugin.tx_consenti.forceReconsentOnRevisionChange');
+        if ($forceSetting !== '') {
+            return $forceSetting !== '0';
+        }
         if (!isset($GLOBALS['TSFE']) || !is_object($GLOBALS['TSFE']) || !isset($GLOBALS['TSFE']->tmpl)) {
             return true;
         }
@@ -582,6 +633,7 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
                 ->where(
                     $queryBuilder->expr()->eq('deleted', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)),
                     $queryBuilder->expr()->eq('hidden', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)),
+                    $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid, ParameterType::INTEGER)),
                     $queryBuilder->expr()->eq('date_key', $queryBuilder->createNamedParameter($dateKey)),
                     $queryBuilder->expr()->eq('revision', $queryBuilder->createNamedParameter($revision)),
                     $queryBuilder->expr()->eq('necessary', $queryBuilder->createNamedParameter($necessary, ParameterType::INTEGER)),
