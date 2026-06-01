@@ -5,7 +5,10 @@
 # cat=Consenti/01_General/10; type=string; label=Cookie name
 plugin.tx_consenti.cookieName = consenti_consent
 
-# cat=Consenti/01_General/20; type=string; label=Privacy URL or page uid
+# cat=Consenti/01_General/20; type=int+; label=Privacy page uid (recommended)
+plugin.tx_consenti.privacyPage =
+
+# cat=Consenti/01_General/21; type=string; label=Privacy URL fallback (legacy)
 plugin.tx_consenti.privacyUrl = /datenschutz
 
 # cat=Consenti/01_General/30; type=string; label=Service rules storage PID(s) (comma separated, empty = all)

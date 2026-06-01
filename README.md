@@ -82,6 +82,7 @@ Default constants in `Configuration/TypoScript/constants.typoscript`:
 ```typoscript
 plugin.tx_consenti {
   cookieName = consenti_consent
+  privacyPage =
   privacyUrl = /datenschutz
   storagePid =
   position = bottom
@@ -96,11 +97,19 @@ plugin.tx_consenti {
 
 You can override these in site package TypoScript constants.
 
-`privacyUrl` supports:
+Preferred configuration:
+- `privacyPage`: TYPO3 page uid (recommended)
+
+Fallback configuration:
+- `privacyUrl`: absolute/relative URL (legacy fallback)
+
+Resolution behavior:
+- if `privacyPage` is set, consenti resolves it via TYPO3 `typolink` (routing/slugs)
+- else `privacyUrl` is used
+
+`privacyUrl` also supports:
 - absolute/relative URL (e.g. `/datenschutz`)
 - TYPO3 page uid as numeric value (e.g. `123`)
-
-If a page uid is provided, `consenti` resolves it via TYPO3 `typolink` on the server side, so configured site routing/slugs are used.
 
 Floating cookie button (`fab`) options:
 - `position = left|center|right` (default: `left`)
