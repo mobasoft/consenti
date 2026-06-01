@@ -50,6 +50,9 @@
   function loadApprovedScripts(consent) {
     var scriptNodes = document.querySelectorAll('script[type="text/plain"][data-consenti-src][data-consenti-category]');
     scriptNodes.forEach(function (node) {
+      if (node.getAttribute("data-consenti-blacklist") === "1") {
+        return;
+      }
       var category = node.getAttribute("data-consenti-category");
       if (!consent[category]) {
         return;
@@ -64,6 +67,9 @@
 
     var iframeNodes = document.querySelectorAll("iframe[data-consenti-src][data-consenti-category][data-consenti-blocked='1']");
     iframeNodes.forEach(function (node) {
+      if (node.getAttribute("data-consenti-blacklist") === "1") {
+        return;
+      }
       var category = node.getAttribute("data-consenti-category");
       if (!consent[category]) {
         return;

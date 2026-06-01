@@ -29,6 +29,12 @@ Custom TYPO3 cookie-consent extension for project-specific requirements.
 - Automatic category detection for external scripts:
   - `statistics` for known analytics patterns (e.g. `matomo`, `plausible`, `analytics`, `gtag`, `googletagmanager`)
   - `marketing` as fallback for other external sources
+- Backend-managed service rules (new):
+  - New table: `tx_consenti_domain_model_service`
+  - Map domains to category (`statistics` or `marketing`)
+  - Optional whitelist flag to always allow matching domains
+  - Optional blacklist flag to never allow matching domains
+  - Rule order follows record sorting
 - Automatic script execution after consent:
   - Blocked scripts are loaded after user approval of their category.
 - Bootstrap/CI color usage:
@@ -63,6 +69,7 @@ Custom TYPO3 cookie-consent extension for project-specific requirements.
 3. Activate extension in TYPO3 backend (`Admin Tools > Extensions`) or via CLI.
 4. Include static TypoScript template:
    - **consenti**
+5. Run database schema update (new table for service rules).
 
 ## Configuration
 
@@ -72,6 +79,7 @@ Default constants in `Configuration/TypoScript/constants.typoscript`:
 plugin.tx_consenti {
   cookieName = consenti_consent
   privacyUrl = /datenschutz
+  storagePid =
   position = bottom
   fab {
     position = left
@@ -96,6 +104,9 @@ Floating cookie button (`fab`) options:
 - `offsetX` (horizontal offset for `left`/`right`)
 - `zIndex` (e.g. `9990`)
 
+Service-rule scope:
+- `storagePid`: comma-separated PID list for service-rule records (empty = all records)
+
 ## Consent Cookie Format
 
 Example:
@@ -107,6 +118,21 @@ Example:
   "marketing": true
 }
 ```
+
+## Backend Service Rules
+
+Create records of type **Consenti Service Rules** (table `tx_consenti_domain_model_service`) in a sysfolder or regular page:
+
+- `Title`: internal name
+- `Category`: `statistics` or `marketing`
+- `Domains`: one or multiple domains (comma, whitespace, or newline separated), e.g. `youtube.com`
+- `Whitelist`: if enabled, matching domains are never blocked by consenti
+- `Blacklist`: if enabled, matching domains are always blocked by consenti (consent cannot load them)
+
+Matching behavior:
+- exact domain match and subdomains are supported (e.g. rule `youtube.com` matches `www.youtube.com`)
+- first matching rule by sorting is used
+- if no rule matches, fallback heuristics are used
 
 ## Roadmap
 
@@ -125,16 +151,15 @@ Example:
 
 ### Stage 3: v2 (next)
 
-- Backend configuration (categories/services/domains)
-- Domain whitelist/blacklist + manual overrides
+- Backend configuration (categories/services/domains) (started)
+- Domain whitelist/blacklist + manual overrides (started)
 - Scanner/reporting UI for third-party sources
 - XLF language support
 - Stronger consent lifecycle (revisioning, re-consent flows)
 
 ## Current Limitations
 
-- No backend module or TCA-driven management UI yet.
-- No domain whitelist/blacklist configuration yet.
+- No dedicated backend module yet (record management via List module/TCA available).
 - Script categorization is heuristic and should be made configurable.
 - No multilingual labels in XLF yet.
 - No scanner/reporting view for detected third-party sources yet.

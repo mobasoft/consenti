@@ -1,3 +1,7 @@
+plugin.tx_consenti {
+  storagePid = {$plugin.tx_consenti.storagePid}
+}
+
 page {
   includeCSS {
     consenti = EXT:consenti/Resources/Public/Css/consenti.css

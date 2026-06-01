@@ -8,6 +8,9 @@ plugin.tx_consenti.cookieName = consenti_consent
 # cat=Consenti/01_General/20; type=string; label=Privacy URL or page uid
 plugin.tx_consenti.privacyUrl = /datenschutz
 
+# cat=Consenti/01_General/30; type=string; label=Service rules storage PID(s) (comma separated, empty = all)
+plugin.tx_consenti.storagePid =
+
 # cat=Consenti/02_Banner/10; type=options[bottom,top]; label=Banner position
 plugin.tx_consenti.position = bottom
 
