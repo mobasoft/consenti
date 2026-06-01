@@ -74,6 +74,7 @@ Custom TYPO3 cookie-consent extension for project-specific requirements.
 4. Add Site Set in TYPO3 14:
    - **Site Management > Sites > [your site] > Sets**
    - add **consenti** (`mobasoft/consenti`)
+   - if not visible yet: run `composer dump-autoload` and flush TYPO3 caches
 5. (Legacy fallback) Include static TypoScript template:
    - **consenti**
 6. Run database schema update (new tables for service rules and source discoveries).
