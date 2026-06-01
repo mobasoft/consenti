@@ -35,12 +35,29 @@
     };
   }
 
-  function getThemeColors() {
+  function getThemeColors(root) {
+    var useThemeColors = (root.getAttribute("data-use-theme-colors") || "1") === "1";
+    if (!useThemeColors) {
+      return {
+        primary: root.getAttribute("data-color-accent") || "#0d6efd",
+        text: root.getAttribute("data-color-banner-text") || "#212529",
+        background: root.getAttribute("data-color-banner-bg") || "#ffffff",
+        onPrimary: root.getAttribute("data-color-on-accent") || "#ffffff"
+      };
+    }
     var styles = getComputedStyle(document.documentElement);
     var primary = styles.getPropertyValue("--bs-primary").trim() || "#0d6efd";
     var text = styles.getPropertyValue("--bs-body-color").trim() || "#212529";
     var background = styles.getPropertyValue("--bs-body-bg").trim() || "#ffffff";
-    return { primary: primary, text: text, background: background };
+    return { primary: primary, text: text, background: background, onPrimary: "#ffffff" };
+  }
+
+  function applyGlobalConsentiColors(colors) {
+    var rootStyle = document.documentElement.style;
+    rootStyle.setProperty("--consenti-primary", colors.primary);
+    rootStyle.setProperty("--consenti-text", colors.text);
+    rootStyle.setProperty("--consenti-bg", colors.background);
+    rootStyle.setProperty("--consenti-on-primary", colors.onPrimary || "#ffffff");
   }
 
   function getFabConfig(root) {
@@ -173,6 +190,7 @@
     banner.style.setProperty("--consenti-primary", colors.primary);
     banner.style.setProperty("--consenti-text", colors.text);
     banner.style.setProperty("--consenti-bg", colors.background);
+    banner.style.setProperty("--consenti-on-primary", colors.onPrimary || "#ffffff");
 
     if (consent) {
       var statisticsPreset = banner.querySelector('[data-consenti-check="statistics"]');
@@ -294,7 +312,8 @@
   function mountBanner(root) {
     var cookieName = root.getAttribute("data-cookie-name") || "consenti_consent";
     var privacyUrl = root.getAttribute("data-privacy-url") || "/datenschutz";
-    var colors = getThemeColors();
+    var colors = getThemeColors(root);
+    applyGlobalConsentiColors(colors);
     var fabConfig = getFabConfig(root);
     var bannerPosition = getBannerPosition(root);
     var i18n = getI18n(root);

@@ -55,7 +55,7 @@
 
 .consenti-actions button[data-consenti-action="all"] {
   background: var(--consenti-primary, #0d6efd);
-  color: #ffffff;
+  color: var(--consenti-on-primary, #ffffff);
 }
 
 .consenti-actions button[data-consenti-action="all"]:hover {
@@ -109,7 +109,7 @@
 
 .consenti-embed-action,
 .consenti-embed-settings {
-  border: 1px solid var(--bs-primary, #0d6efd);
+  border: 1px solid var(--consenti-primary, var(--bs-primary, #0d6efd));
   border-radius: 6px;
   padding: 0.45rem 0.8rem;
   cursor: pointer;
@@ -118,13 +118,13 @@
 }
 
 .consenti-embed-action {
-  background: var(--bs-primary, #0d6efd);
-  color: #ffffff;
+  background: var(--consenti-primary, var(--bs-primary, #0d6efd));
+  color: var(--consenti-on-primary, #ffffff);
 }
 
 .consenti-embed-settings {
   background: var(--bs-body-bg, #ffffff);
-  color: var(--bs-primary, #0d6efd);
+  color: var(--consenti-primary, var(--bs-primary, #0d6efd));
 }
 
 .consenti-embed-action:hover {

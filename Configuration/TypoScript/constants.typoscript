@@ -1,6 +1,7 @@
 # customsubcategory=01_General=General
 # customsubcategory=02_Banner=Banner
 # customsubcategory=03_FloatingButton=Floating Button
+# customsubcategory=04_Colors=Colors
 
 # cat=Consenti/01_General/10; type=string; label=Cookie name
 plugin.tx_consenti.cookieName = consenti_consent
@@ -37,3 +38,18 @@ plugin.tx_consenti.fab.offsetX = 1rem
 
 # cat=Consenti/03_FloatingButton/40; type=int+; label=Floating button z-index
 plugin.tx_consenti.fab.zIndex = 9990
+
+# cat=Consenti/04_Colors/10; type=boolean; label=Use colors from active theme (Bootstrap variables)
+plugin.tx_consenti.colors.useThemeColors = 1
+
+# cat=Consenti/04_Colors/20; type=string; label=Banner background color (hex, used when theme colors are disabled)
+plugin.tx_consenti.colors.bannerBackground = #ffffff
+
+# cat=Consenti/04_Colors/30; type=string; label=Banner text color (hex, used when theme colors are disabled)
+plugin.tx_consenti.colors.bannerText = #212529
+
+# cat=Consenti/04_Colors/40; type=string; label=Accent color (hex, links/buttons/focus)
+plugin.tx_consenti.colors.accent = #0d6efd
+
+# cat=Consenti/04_Colors/50; type=string; label=Text on accent color (hex)
+plugin.tx_consenti.colors.buttonTextOnAccent = #ffffff

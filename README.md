@@ -88,6 +88,13 @@ plugin.tx_consenti {
   loggingPid =
   consentRevision = 1
   forceReconsentOnRevisionChange = 1
+  colors {
+    useThemeColors = 1
+    bannerBackground = #ffffff
+    bannerText = #212529
+    accent = #0d6efd
+    buttonTextOnAccent = #ffffff
+  }
   position = bottom
   fab {
     position = left
@@ -133,6 +140,16 @@ Consent lifecycle:
 - `forceReconsentOnRevisionChange`:
   - `1` = existing cookie becomes invalid when revision changes
   - `0` = keep existing cookie despite revision change
+
+Color behavior:
+- `colors.useThemeColors = 1` (default):
+  - reads active Bootstrap variables (`--bs-primary`, `--bs-body-color`, `--bs-body-bg`)
+- `colors.useThemeColors = 0`:
+  - uses explicit TypoScript color values:
+    - `colors.bannerBackground`
+    - `colors.bannerText`
+    - `colors.accent`
+    - `colors.buttonTextOnAccent`
 
 ## Consent Cookie Format
 
