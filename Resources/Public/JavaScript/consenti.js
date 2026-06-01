@@ -52,6 +52,31 @@
     return position === "top" ? "top" : "bottom";
   }
 
+  function getI18n(root) {
+    return {
+      bannerText: root.getAttribute("data-l10n-banner-text") || "We use cookies and external services. Details in the privacy policy.",
+      bannerPrivacy: root.getAttribute("data-l10n-banner-privacy") || "Privacy policy",
+      optionNecessary: root.getAttribute("data-l10n-option-necessary") || "Necessary",
+      optionStatistics: root.getAttribute("data-l10n-option-statistics") || "Statistics",
+      optionMarketing: root.getAttribute("data-l10n-option-marketing") || "Marketing",
+      actionDeny: root.getAttribute("data-l10n-action-deny") || "Necessary only",
+      actionSave: root.getAttribute("data-l10n-action-save") || "Save",
+      actionAll: root.getAttribute("data-l10n-action-all") || "Accept all",
+      settings: root.getAttribute("data-l10n-settings") || "Cookie settings",
+      placeholderMessage: root.getAttribute("data-l10n-placeholder-message") || 'This content is blocked until "{category}" is allowed.',
+      placeholderBlacklist: root.getAttribute("data-l10n-placeholder-blacklist") || "This content is blocked by a Consenti blacklist rule.",
+      placeholderAllow: root.getAttribute("data-l10n-placeholder-allow") || "Load content ({category})"
+    };
+  }
+
+  function labelForCategory(category, i18n) {
+    return category === "statistics" ? i18n.optionStatistics : i18n.optionMarketing;
+  }
+
+  function interpolateCategory(text, categoryLabel) {
+    return String(text || "").replace("{category}", categoryLabel);
+  }
+
   function loadApprovedScripts(consent) {
     var scriptNodes = document.querySelectorAll('script[type="text/plain"][data-consenti-src][data-consenti-category]');
     scriptNodes.forEach(function (node) {
@@ -91,33 +116,49 @@
     });
   }
 
-  function openConsentDialog(cookieName, privacyUrl, colors, bannerPosition) {
+  function openConsentDialog(cookieName, privacyUrl, colors, bannerPosition, i18n) {
     if (document.querySelector(".consenti-banner")) {
       return;
     }
     var currentConsent = parseCookie(cookieName);
-    buildBanner(cookieName, privacyUrl, colors, currentConsent, bannerPosition);
+    buildBanner(cookieName, privacyUrl, colors, currentConsent, bannerPosition, i18n);
   }
 
-  function buildBanner(cookieName, privacyUrl, colors, consent, bannerPosition) {
+  function buildBanner(cookieName, privacyUrl, colors, consent, bannerPosition, i18n) {
     var banner = document.createElement("aside");
     banner.className = "consenti-banner";
     if (bannerPosition === "top") {
       banner.classList.add("consenti-banner-top");
     }
     banner.innerHTML =
-      '<div class="consenti-text">Wir verwenden Cookies und externe Dienste. Details in der <a href="' +
+      '<div class="consenti-text">' +
+      i18n.bannerText +
+      ' <a href="' +
       privacyUrl +
-      '">Datenschutzerklärung</a>.</div>' +
+      '">' +
+      i18n.bannerPrivacy +
+      "</a>.</div>" +
       '<div class="consenti-options">' +
-      '<label><input type="checkbox" checked disabled> Notwendig</label>' +
-      '<label><input type="checkbox" data-consenti-check="statistics"> Statistik</label>' +
-      '<label><input type="checkbox" data-consenti-check="marketing"> Marketing</label>' +
+      '<label><input type="checkbox" checked disabled> ' +
+      i18n.optionNecessary +
+      "</label>" +
+      '<label><input type="checkbox" data-consenti-check="statistics"> ' +
+      i18n.optionStatistics +
+      "</label>" +
+      '<label><input type="checkbox" data-consenti-check="marketing"> ' +
+      i18n.optionMarketing +
+      "</label>" +
       "</div>" +
       '<div class="consenti-actions">' +
-      '<button type="button" data-consenti-action="deny">Nur notwendig</button>' +
-      '<button type="button" data-consenti-action="save">Speichern</button>' +
-      '<button type="button" data-consenti-action="all">Alle akzeptieren</button>' +
+      '<button type="button" data-consenti-action="deny">' +
+      i18n.actionDeny +
+      "</button>" +
+      '<button type="button" data-consenti-action="save">' +
+      i18n.actionSave +
+      "</button>" +
+      '<button type="button" data-consenti-action="all">' +
+      i18n.actionAll +
+      "</button>" +
       "</div>";
 
     banner.style.setProperty("--consenti-primary", colors.primary);
@@ -168,12 +209,12 @@
     return banner;
   }
 
-  function mountRevokeButton(cookieName, privacyUrl, colors, fabConfig, bannerPosition) {
+  function mountRevokeButton(cookieName, privacyUrl, colors, fabConfig, bannerPosition, i18n) {
     var button = document.createElement("button");
     button.className = "consenti-fab";
     button.type = "button";
-    button.setAttribute("aria-label", "Cookie-Einstellungen");
-    button.title = "Cookie-Einstellungen";
+    button.setAttribute("aria-label", i18n.settings);
+    button.title = i18n.settings;
     button.innerHTML = "&#x1F36A;";
     button.style.setProperty("--consenti-primary", colors.primary);
     button.style.bottom = fabConfig.bottom;
@@ -192,11 +233,11 @@
     document.body.appendChild(button);
 
     button.addEventListener("click", function () {
-      openConsentDialog(cookieName, privacyUrl, colors, bannerPosition);
+      openConsentDialog(cookieName, privacyUrl, colors, bannerPosition, i18n);
     });
   }
 
-  function mountEmbedActions(cookieName, privacyUrl, colors, bannerPosition) {
+  function mountEmbedActions(cookieName, privacyUrl, colors, bannerPosition, i18n) {
     document.addEventListener("click", function (event) {
       var allowButton = event.target.closest("[data-consenti-allow-category]");
       if (allowButton) {
@@ -215,7 +256,34 @@
 
       var settingsButton = event.target.closest("[data-consenti-open-settings]");
       if (settingsButton) {
-        openConsentDialog(cookieName, privacyUrl, colors, bannerPosition);
+        openConsentDialog(cookieName, privacyUrl, colors, bannerPosition, i18n);
+      }
+    });
+  }
+
+  function localizeEmbedPlaceholders(i18n) {
+    var placeholders = document.querySelectorAll(".consenti-embed-placeholder[data-consenti-category]");
+    placeholders.forEach(function (placeholder) {
+      var category = placeholder.getAttribute("data-consenti-category") || "marketing";
+      var categoryLabel = labelForCategory(category, i18n);
+      var blockedIframe = placeholder.previousElementSibling;
+      var isBlacklist = blockedIframe && blockedIframe.getAttribute("data-consenti-blacklist") === "1";
+
+      var message = placeholder.querySelector(".consenti-embed-message");
+      if (message) {
+        message.textContent = isBlacklist
+          ? i18n.placeholderBlacklist
+          : interpolateCategory(i18n.placeholderMessage, categoryLabel);
+      }
+
+      var allowButton = placeholder.querySelector("[data-consenti-allow-category]");
+      if (allowButton) {
+        allowButton.textContent = interpolateCategory(i18n.placeholderAllow, categoryLabel);
+      }
+
+      var settingsButton = placeholder.querySelector("[data-consenti-open-settings]");
+      if (settingsButton) {
+        settingsButton.textContent = i18n.settings;
       }
     });
   }
@@ -226,15 +294,17 @@
     var colors = getThemeColors();
     var fabConfig = getFabConfig(root);
     var bannerPosition = getBannerPosition(root);
+    var i18n = getI18n(root);
     var consent = parseCookie(cookieName);
-    mountRevokeButton(cookieName, privacyUrl, colors, fabConfig, bannerPosition);
-    mountEmbedActions(cookieName, privacyUrl, colors, bannerPosition);
+    mountRevokeButton(cookieName, privacyUrl, colors, fabConfig, bannerPosition, i18n);
+    mountEmbedActions(cookieName, privacyUrl, colors, bannerPosition, i18n);
+    localizeEmbedPlaceholders(i18n);
     if (consent) {
       loadApprovedScripts(consent);
       return;
     }
 
-    buildBanner(cookieName, privacyUrl, colors, consent, bannerPosition);
+    buildBanner(cookieName, privacyUrl, colors, consent, bannerPosition, i18n);
   }
 
   window.addEventListener("load", function () {

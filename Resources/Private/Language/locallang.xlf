@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="messages" date="2026-06-01T00:00:00Z" product-name="consenti">
+    <header/>
+    <body>
+      <trans-unit id="consent.banner.text">
+        <source>We use cookies and external services. Details in the privacy policy.</source>
+      </trans-unit>
+      <trans-unit id="consent.banner.privacy">
+        <source>Privacy policy</source>
+      </trans-unit>
+      <trans-unit id="consent.option.necessary">
+        <source>Necessary</source>
+      </trans-unit>
+      <trans-unit id="consent.option.statistics">
+        <source>Statistics</source>
+      </trans-unit>
+      <trans-unit id="consent.option.marketing">
+        <source>Marketing</source>
+      </trans-unit>
+      <trans-unit id="consent.action.deny">
+        <source>Necessary only</source>
+      </trans-unit>
+      <trans-unit id="consent.action.save">
+        <source>Save</source>
+      </trans-unit>
+      <trans-unit id="consent.action.all">
+        <source>Accept all</source>
+      </trans-unit>
+      <trans-unit id="consent.settings">
+        <source>Cookie settings</source>
+      </trans-unit>
+      <trans-unit id="consent.placeholder.message">
+        <source>This content is blocked until {category} is allowed.</source>
+      </trans-unit>
+      <trans-unit id="consent.placeholder.blacklist">
+        <source>This content is blocked by a Consenti blacklist rule.</source>
+      </trans-unit>
+      <trans-unit id="consent.placeholder.allow">
+        <source>Load content ({category})</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

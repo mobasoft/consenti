@@ -35,7 +35,80 @@ page {
       data-fab-position="{$plugin.tx_consenti.fab.position}"
       data-fab-bottom="{$plugin.tx_consenti.fab.bottom}"
       data-fab-offset-x="{$plugin.tx_consenti.fab.offsetX}"
-      data-fab-z-index="{$plugin.tx_consenti.fab.zIndex}"></div>
+      data-fab-z-index="{$plugin.tx_consenti.fab.zIndex}"
+      data-l10n-banner-text="
     )
+
+    40 = TEXT
+    40.data = LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:consent.banner.text
+
+    50 = TEXT
+    50.value (" data-l10n-banner-privacy=")
+
+    60 = TEXT
+    60.data = LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:consent.banner.privacy
+
+    70 = TEXT
+    70.value (" data-l10n-option-necessary=")
+
+    80 = TEXT
+    80.data = LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:consent.option.necessary
+
+    90 = TEXT
+    90.value (" data-l10n-option-statistics=")
+
+    100 = TEXT
+    100.data = LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:consent.option.statistics
+
+    110 = TEXT
+    110.value (" data-l10n-option-marketing=")
+
+    120 = TEXT
+    120.data = LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:consent.option.marketing
+
+    130 = TEXT
+    130.value (" data-l10n-action-deny=")
+
+    140 = TEXT
+    140.data = LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:consent.action.deny
+
+    150 = TEXT
+    150.value (" data-l10n-action-save=")
+
+    160 = TEXT
+    160.data = LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:consent.action.save
+
+    170 = TEXT
+    170.value (" data-l10n-action-all=")
+
+    180 = TEXT
+    180.data = LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:consent.action.all
+
+    190 = TEXT
+    190.value (" data-l10n-settings=")
+
+    200 = TEXT
+    200.data = LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:consent.settings
+
+    210 = TEXT
+    210.value (" data-l10n-placeholder-message=")
+
+    220 = TEXT
+    220.data = LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:consent.placeholder.message
+
+    230 = TEXT
+    230.value (" data-l10n-placeholder-blacklist=")
+
+    240 = TEXT
+    240.data = LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:consent.placeholder.blacklist
+
+    250 = TEXT
+    250.value (" data-l10n-placeholder-allow=")
+
+    260 = TEXT
+    260.data = LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:consent.placeholder.allow
+
+    270 = TEXT
+    270.value ("></div>)
   }
 }
