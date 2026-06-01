@@ -13,6 +13,7 @@
   max-width: 980px;
   margin: 0 auto;
   font-size: 0.95rem;
+  line-height: 1.4;
 }
 
 .consenti-banner.consenti-banner-top {
@@ -45,11 +46,20 @@
   border-radius: 6px;
   padding: 0.45rem 0.8rem;
   cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.consenti-actions button:hover {
+  background: color-mix(in srgb, var(--consenti-primary, #0d6efd) 8%, transparent);
 }
 
 .consenti-actions button[data-consenti-action="all"] {
   background: var(--consenti-primary, #0d6efd);
   color: #ffffff;
+}
+
+.consenti-actions button[data-consenti-action="all"]:hover {
+  filter: brightness(0.95);
 }
 
 .consenti-fab {
@@ -65,7 +75,8 @@
   color: var(--consenti-primary, #0d6efd);
   cursor: pointer;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
-  font-size: 20px;
+  font-size: 18px;
+  font-weight: 700;
   line-height: 1;
 }
 
@@ -103,6 +114,7 @@
   padding: 0.45rem 0.8rem;
   cursor: pointer;
   margin: 0;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .consenti-embed-action {
@@ -113,4 +125,41 @@
 .consenti-embed-settings {
   background: var(--bs-body-bg, #ffffff);
   color: var(--bs-primary, #0d6efd);
+}
+
+.consenti-embed-action:hover {
+  filter: brightness(0.95);
+}
+
+.consenti-embed-settings:hover {
+  background: color-mix(in srgb, var(--bs-primary, #0d6efd) 8%, var(--bs-body-bg, #ffffff));
+}
+
+.consenti-actions button:focus-visible,
+.consenti-embed-action:focus-visible,
+.consenti-embed-settings:focus-visible,
+.consenti-fab:focus-visible {
+  outline: 2px solid var(--consenti-primary, var(--bs-primary, #0d6efd));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--consenti-primary, var(--bs-primary, #0d6efd)) 25%, transparent);
+}
+
+@media (max-width: 576px) {
+  .consenti-banner {
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    padding: 0.875rem;
+    font-size: 0.92rem;
+  }
+
+  .consenti-banner.consenti-banner-top {
+    top: 0.75rem;
+  }
+
+  .consenti-options,
+  .consenti-actions {
+    gap: 0.5rem;
+    margin-top: 0.7rem;
+  }
 }

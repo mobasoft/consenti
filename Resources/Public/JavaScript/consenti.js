@@ -223,7 +223,7 @@
     button.type = "button";
     button.setAttribute("aria-label", i18n.settings);
     button.title = i18n.settings;
-    button.innerHTML = "&#x1F36A;";
+    button.innerHTML = "⚙";
     button.style.setProperty("--consenti-primary", colors.primary);
     button.style.bottom = fabConfig.bottom;
     button.style.zIndex = fabConfig.zIndex;
