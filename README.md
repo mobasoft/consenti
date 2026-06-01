@@ -94,6 +94,8 @@ plugin.tx_consenti {
     bannerText = #212529
     accent = #0d6efd
     buttonTextOnAccent = #ffffff
+    placeholderBackground = #f8f9fa
+    placeholderBorder = #d0d7de
   }
   position = bottom
   fab {
@@ -150,6 +152,8 @@ Color behavior:
     - `colors.bannerText`
     - `colors.accent`
     - `colors.buttonTextOnAccent`
+    - `colors.placeholderBackground`
+    - `colors.placeholderBorder`
 
 ## Consent Cookie Format
 

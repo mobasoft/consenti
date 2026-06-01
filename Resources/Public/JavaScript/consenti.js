@@ -42,14 +42,24 @@
         primary: root.getAttribute("data-color-accent") || "#0d6efd",
         text: root.getAttribute("data-color-banner-text") || "#212529",
         background: root.getAttribute("data-color-banner-bg") || "#ffffff",
-        onPrimary: root.getAttribute("data-color-on-accent") || "#ffffff"
+        onPrimary: root.getAttribute("data-color-on-accent") || "#ffffff",
+        placeholderBackground: root.getAttribute("data-color-placeholder-bg") || "#f8f9fa",
+        placeholderBorder: root.getAttribute("data-color-placeholder-border") || "#d0d7de"
       };
     }
     var styles = getComputedStyle(document.documentElement);
     var primary = styles.getPropertyValue("--bs-primary").trim() || "#0d6efd";
     var text = styles.getPropertyValue("--bs-body-color").trim() || "#212529";
     var background = styles.getPropertyValue("--bs-body-bg").trim() || "#ffffff";
-    return { primary: primary, text: text, background: background, onPrimary: "#ffffff" };
+    var placeholderBackground = styles.getPropertyValue("--bs-body-bg").trim() || "#ffffff";
+    return {
+      primary: primary,
+      text: text,
+      background: background,
+      onPrimary: "#ffffff",
+      placeholderBackground: placeholderBackground,
+      placeholderBorder: primary
+    };
   }
 
   function applyGlobalConsentiColors(colors) {
@@ -58,6 +68,8 @@
     rootStyle.setProperty("--consenti-text", colors.text);
     rootStyle.setProperty("--consenti-bg", colors.background);
     rootStyle.setProperty("--consenti-on-primary", colors.onPrimary || "#ffffff");
+    rootStyle.setProperty("--consenti-placeholder-bg", colors.placeholderBackground || "#f8f9fa");
+    rootStyle.setProperty("--consenti-placeholder-border", colors.placeholderBorder || colors.primary || "#0d6efd");
   }
 
   function getFabConfig(root) {

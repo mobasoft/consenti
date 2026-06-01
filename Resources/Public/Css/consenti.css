@@ -81,11 +81,11 @@
 }
 
 .consenti-embed-placeholder {
-  border: 1px solid color-mix(in srgb, var(--bs-body-color, #212529) 20%, transparent);
+  border: 1px solid var(--consenti-placeholder-border, color-mix(in srgb, var(--bs-body-color, #212529) 20%, transparent));
   border-radius: 8px;
   padding: 1rem;
   margin: 0.5rem 0;
-  background: color-mix(in srgb, var(--bs-body-bg, #ffffff) 90%, var(--bs-body-color, #212529) 10%);
+  background: var(--consenti-placeholder-bg, color-mix(in srgb, var(--bs-body-bg, #ffffff) 90%, var(--bs-body-color, #212529) 10%));
   background-image: repeating-linear-gradient(
     -45deg,
     color-mix(in srgb, var(--bs-body-color, #212529) 10%, transparent) 0,

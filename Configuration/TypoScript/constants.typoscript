@@ -53,3 +53,9 @@ plugin.tx_consenti.colors.accent = #0d6efd
 
 # cat=Consenti/04_Colors/50; type=string; label=Text on accent color (hex)
 plugin.tx_consenti.colors.buttonTextOnAccent = #ffffff
+
+# cat=Consenti/04_Colors/60; type=string; label=Placeholder background color (hex)
+plugin.tx_consenti.colors.placeholderBackground = #f8f9fa
+
+# cat=Consenti/04_Colors/70; type=string; label=Placeholder border color (hex)
+plugin.tx_consenti.colors.placeholderBorder = #d0d7de
