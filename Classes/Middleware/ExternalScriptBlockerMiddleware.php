@@ -128,27 +128,19 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
         $placeholder->setAttribute('data-consenti-category', $category);
         $placeholder->setAttribute('style', $this->buildPlaceholderStyle($iframe));
 
-        $message = $iframe->ownerDocument->createElement(
-            'p',
-            $decision['blacklist']
-                ? 'Dieser Inhalt wurde durch eine Consenti-Blacklist blockiert.'
-                : sprintf(
-                    'Dieser Inhalt ist blockiert, bis "%s" erlaubt ist.',
-                    $category === 'marketing' ? 'Marketing' : 'Statistik'
-                )
-        );
+        $message = $iframe->ownerDocument->createElement('p');
         $message->setAttribute('class', 'consenti-embed-message');
         $placeholder->appendChild($message);
 
         if (!$decision['blacklist']) {
-            $allowButton = $iframe->ownerDocument->createElement('button', $category === 'marketing' ? 'Inhalt laden (Marketing)' : 'Inhalt laden (Statistik)');
+            $allowButton = $iframe->ownerDocument->createElement('button');
             $allowButton->setAttribute('type', 'button');
             $allowButton->setAttribute('class', 'consenti-embed-action');
             $allowButton->setAttribute('data-consenti-allow-category', $category);
             $placeholder->appendChild($allowButton);
         }
 
-        $settingsButton = $iframe->ownerDocument->createElement('button', 'Cookie-Einstellungen');
+        $settingsButton = $iframe->ownerDocument->createElement('button');
         $settingsButton->setAttribute('type', 'button');
         $settingsButton->setAttribute('class', 'consenti-embed-settings');
         $settingsButton->setAttribute('data-consenti-open-settings', '1');
