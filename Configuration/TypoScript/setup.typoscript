@@ -1,6 +1,7 @@
 plugin.tx_consenti {
   cookieName = {$plugin.tx_consenti.cookieName}
   storagePid = {$plugin.tx_consenti.storagePid}
+  loggingPid = {$plugin.tx_consenti.loggingPid}
   consentRevision = {$plugin.tx_consenti.consentRevision}
   forceReconsentOnRevisionChange = {$plugin.tx_consenti.forceReconsentOnRevisionChange}
 }

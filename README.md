@@ -85,6 +85,7 @@ plugin.tx_consenti {
   privacyPage =
   privacyUrl = /datenschutz
   storagePid =
+  loggingPid =
   consentRevision = 1
   forceReconsentOnRevisionChange = 1
   position = bottom
@@ -121,6 +122,11 @@ Floating cookie button (`fab`) options:
 
 Service-rule scope:
 - `storagePid`: comma-separated PID list for service-rule records (empty = all records)
+
+Logging scope:
+- `loggingPid`: target sysfolder PID for discovery and consent-stat records
+- fallback: first PID from `storagePid`
+- if neither resolves to a valid PID (`>0`), no logging records are written
 
 Consent lifecycle:
 - `consentRevision`: arbitrary revision identifier for consent text/vendor set (e.g. `2026-06`)

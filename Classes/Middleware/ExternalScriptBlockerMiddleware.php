@@ -354,10 +354,13 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
         if ($this->scannerRows === []) {
             return;
         }
+        $pid = $this->getLoggingPid();
+        if ($pid <= 0) {
+            return;
+        }
         try {
             $connection = GeneralUtility::makeInstance(ConnectionPool::class)
                 ->getConnectionForTable('tx_consenti_domain_model_discovery');
-            $pid = $this->getScannerPid();
             $now = time();
 
             foreach ($this->scannerRows as $key => $row) {
@@ -418,8 +421,21 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
         }
     }
 
-    private function getScannerPid(): int
+    private function getLoggingPid(): int
     {
+        if (!isset($GLOBALS['TSFE']) || !is_object($GLOBALS['TSFE']) || !isset($GLOBALS['TSFE']->tmpl)) {
+            return 0;
+        }
+        $setup = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_consenti.'] ?? null;
+        if (!is_array($setup)) {
+            return 0;
+        }
+
+        $loggingPid = (int)trim((string)($setup['loggingPid'] ?? ''));
+        if ($loggingPid > 0) {
+            return $loggingPid;
+        }
+
         $storagePids = $this->getConfiguredStoragePids();
         if ($storagePids !== []) {
             return (int)$storagePids[0];
@@ -546,6 +562,10 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
 
     private function logConsentState(array $consent): void
     {
+        $pid = $this->getLoggingPid();
+        if ($pid <= 0) {
+            return;
+        }
         try {
             $connection = GeneralUtility::makeInstance(ConnectionPool::class)
                 ->getConnectionForTable('tx_consenti_domain_model_consent_stat');
@@ -555,8 +575,6 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
             $statistics = !empty($consent['statistics']) ? 1 : 0;
             $marketing = !empty($consent['marketing']) ? 1 : 0;
             $now = time();
-            $pid = $this->getScannerPid();
-
             $queryBuilder = $connection->createQueryBuilder();
             $existing = $queryBuilder
                 ->select('uid', 'hits')
