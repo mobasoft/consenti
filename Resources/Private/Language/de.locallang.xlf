@@ -87,6 +87,42 @@
         <source>One or multiple domains (comma, whitespace, or newline separated), e.g. youtube.com. Invalid entries are ignored.</source>
         <target>Eine oder mehrere Domains (durch Komma, Leerzeichen oder Zeilenumbruch getrennt), z. B. youtube.com. Ungültige Einträge werden ignoriert.</target>
       </trans-unit>
+      <trans-unit id="backend.discovery.title">
+        <source>Consenti External Source Discoveries</source>
+        <target>Consenti Externe-Quellen-Funde</target>
+      </trans-unit>
+      <trans-unit id="backend.discovery.field.host">
+        <source>Host</source>
+        <target>Host</target>
+      </trans-unit>
+      <trans-unit id="backend.discovery.field.category">
+        <source>Category</source>
+        <target>Kategorie</target>
+      </trans-unit>
+      <trans-unit id="backend.discovery.field.sourceType">
+        <source>Source type</source>
+        <target>Quelltyp</target>
+      </trans-unit>
+      <trans-unit id="backend.discovery.field.decision">
+        <source>Last decision</source>
+        <target>Letzte Entscheidung</target>
+      </trans-unit>
+      <trans-unit id="backend.discovery.field.hits">
+        <source>Hits</source>
+        <target>Treffer</target>
+      </trans-unit>
+      <trans-unit id="backend.discovery.field.firstSeen">
+        <source>First seen</source>
+        <target>Erstmalig gesehen</target>
+      </trans-unit>
+      <trans-unit id="backend.discovery.field.lastSeen">
+        <source>Last seen</source>
+        <target>Zuletzt gesehen</target>
+      </trans-unit>
+      <trans-unit id="backend.discovery.field.lastSourceUrl">
+        <source>Last source URL</source>
+        <target>Letzte Quell-URL</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

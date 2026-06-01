@@ -66,6 +66,33 @@
       <trans-unit id="backend.serviceRules.field.domains.description">
         <source>One or multiple domains (comma, whitespace, or newline separated), e.g. youtube.com. Invalid entries are ignored.</source>
       </trans-unit>
+      <trans-unit id="backend.discovery.title">
+        <source>Consenti External Source Discoveries</source>
+      </trans-unit>
+      <trans-unit id="backend.discovery.field.host">
+        <source>Host</source>
+      </trans-unit>
+      <trans-unit id="backend.discovery.field.category">
+        <source>Category</source>
+      </trans-unit>
+      <trans-unit id="backend.discovery.field.sourceType">
+        <source>Source type</source>
+      </trans-unit>
+      <trans-unit id="backend.discovery.field.decision">
+        <source>Last decision</source>
+      </trans-unit>
+      <trans-unit id="backend.discovery.field.hits">
+        <source>Hits</source>
+      </trans-unit>
+      <trans-unit id="backend.discovery.field.firstSeen">
+        <source>First seen</source>
+      </trans-unit>
+      <trans-unit id="backend.discovery.field.lastSeen">
+        <source>Last seen</source>
+      </trans-unit>
+      <trans-unit id="backend.discovery.field.lastSourceUrl">
+        <source>Last source URL</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

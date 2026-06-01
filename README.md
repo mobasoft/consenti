@@ -35,6 +35,10 @@ Custom TYPO3 cookie-consent extension for project-specific requirements.
   - Optional whitelist flag to always allow matching domains
   - Optional blacklist flag to never allow matching domains
   - Rule order follows record sorting
+- Scanner MVP for external sources (new):
+  - New table: `tx_consenti_domain_model_discovery`
+  - Tracks detected external hosts from `script` and `iframe` sources
+  - Stores category, source type, hit counter, timestamps, and last decision
 - Automatic script execution after consent:
   - Blocked scripts are loaded after user approval of their category.
 - Bootstrap/CI color usage:
@@ -69,7 +73,7 @@ Custom TYPO3 cookie-consent extension for project-specific requirements.
 3. Activate extension in TYPO3 backend (`Admin Tools > Extensions`) or via CLI.
 4. Include static TypoScript template:
    - **consenti**
-5. Run database schema update (new table for service rules).
+5. Run database schema update (new tables for service rules and source discoveries).
 
 ## Configuration
 
@@ -134,6 +138,17 @@ Matching behavior:
 - first matching rule by sorting is used
 - if no rule matches, fallback heuristics are used
 
+## Backend Source Discoveries (Scanner MVP)
+
+Detected external sources are written to `tx_consenti_domain_model_discovery` and can be reviewed via List module in a sysfolder.
+
+Stored fields:
+- `host` (detected external domain)
+- `category` (`statistics` or `marketing`)
+- `source_type` (`script` or `iframe`)
+- `decision` (`blocked`, `consented`, `whitelist`, `blacklist`)
+- `hits`, `first_seen`, `last_seen`, `last_source_url`
+
 ## Roadmap
 
 ### Stage 1: MVP (done)
@@ -153,7 +168,7 @@ Matching behavior:
 
 - Backend configuration (categories/services/domains) (started)
 - Domain whitelist/blacklist + manual overrides (started)
-- Scanner/reporting UI for third-party sources
+- Scanner/reporting UI for third-party sources (MVP tracking done, dedicated UI pending)
 - XLF language support
 - Stronger consent lifecycle (revisioning, re-consent flows)
 
@@ -161,8 +176,7 @@ Matching behavior:
 
 - No dedicated backend module yet (record management via List module/TCA available).
 - Script categorization is heuristic and should be made configurable.
-- No multilingual labels in XLF yet.
-- No scanner/reporting view for detected third-party sources yet.
+- No dedicated scanner/reporting backend module yet (MVP data tracking is available via List module).
 
 ## Development Notes
 

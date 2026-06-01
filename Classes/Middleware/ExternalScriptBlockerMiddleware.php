@@ -25,6 +25,16 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
 
     private bool $serviceRulesLoaded = false;
 
+    /**
+     * @var array<string, int>
+     */
+    private array $scannerHits = [];
+
+    /**
+     * @var array<string, array{host: string, category: string, sourceType: string, lastSourceUrl: string, decision: string}>
+     */
+    private array $scannerRows = [];
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);
@@ -34,9 +44,7 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
         }
 
         $consent = $this->getConsentFromCookie($request);
-        if (!empty($consent['marketing']) && !empty($consent['statistics'])) {
-            return $response;
-        }
+        $allConsented = !empty($consent['marketing']) && !empty($consent['statistics']);
 
         $html = (string)$response->getBody();
         if ($html === '' || (stripos($html, '<script') === false && stripos($html, '<iframe') === false)) {
@@ -56,14 +64,16 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
             if (!$script instanceof DOMElement) {
                 continue;
             }
-            $this->maybeBlockScript($script, $host, $consent);
+            $this->maybeBlockScript($script, $host, $consent, $allConsented);
         }
         foreach ($dom->getElementsByTagName('iframe') as $iframe) {
             if (!$iframe instanceof DOMElement) {
                 continue;
             }
-            $this->maybeBlockIframe($iframe, $host, $consent);
+            $this->maybeBlockIframe($iframe, $host, $consent, $allConsented);
         }
+
+        $this->flushScannerRows();
 
         $updated = $dom->saveHTML();
         if (!is_string($updated) || $updated === '') {
@@ -75,7 +85,7 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
         );
     }
 
-    private function maybeBlockIframe(DOMElement $iframe, string $currentHost, array $consent): void
+    private function maybeBlockIframe(DOMElement $iframe, string $currentHost, array $consent, bool $allConsented): void
     {
         if ($iframe->hasAttribute('data-consenti-ignore')) {
             return;
@@ -89,6 +99,12 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
         }
 
         $decision = $this->resolveDecision($src);
+        $this->collectScannerRow(
+            $src,
+            $decision['category'],
+            'iframe',
+            $this->buildDecisionLabel($decision, $consent, $allConsented)
+        );
         if ($decision['whitelist']) {
             return;
         }
@@ -158,7 +174,7 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
         return implode(';', $styles) . ';';
     }
 
-    private function maybeBlockScript(DOMElement $script, string $currentHost, array $consent): void
+    private function maybeBlockScript(DOMElement $script, string $currentHost, array $consent, bool $allConsented): void
     {
         if ($script->hasAttribute('data-consenti-ignore')) {
             return;
@@ -175,6 +191,12 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
         }
 
         $decision = $this->resolveDecision($src);
+        $this->collectScannerRow(
+            $src,
+            $decision['category'],
+            'script',
+            $this->buildDecisionLabel($decision, $consent, $allConsented)
+        );
         if ($decision['whitelist']) {
             return;
         }
@@ -300,6 +322,115 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
         }
 
         return $value;
+    }
+
+    private function buildDecisionLabel(array $decision, array $consent, bool $allConsented): string
+    {
+        if ($decision['blacklist']) {
+            return 'blacklist';
+        }
+        if ($decision['whitelist']) {
+            return 'whitelist';
+        }
+        if ($allConsented || !empty($consent[$decision['category']])) {
+            return 'consented';
+        }
+        return 'blocked';
+    }
+
+    private function collectScannerRow(string $src, string $category, string $sourceType, string $decision): void
+    {
+        $host = $this->extractHost($src);
+        if ($host === '') {
+            return;
+        }
+        $key = $host . '|' . $category . '|' . $sourceType;
+        $this->scannerHits[$key] = ($this->scannerHits[$key] ?? 0) + 1;
+        $this->scannerRows[$key] = [
+            'host' => $host,
+            'category' => $category,
+            'sourceType' => $sourceType,
+            'lastSourceUrl' => $src,
+            'decision' => $decision,
+        ];
+    }
+
+    private function flushScannerRows(): void
+    {
+        if ($this->scannerRows === []) {
+            return;
+        }
+        try {
+            $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+                ->getConnectionForTable('tx_consenti_domain_model_discovery');
+            $pid = $this->getScannerPid();
+            $now = time();
+
+            foreach ($this->scannerRows as $key => $row) {
+                $hits = $this->scannerHits[$key] ?? 1;
+                $queryBuilder = $connection->createQueryBuilder();
+                $existing = $queryBuilder
+                    ->select('uid', 'hits')
+                    ->from('tx_consenti_domain_model_discovery')
+                    ->where(
+                        $queryBuilder->expr()->eq('deleted', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)),
+                        $queryBuilder->expr()->eq('hidden', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)),
+                        $queryBuilder->expr()->eq('host', $queryBuilder->createNamedParameter($row['host'])),
+                        $queryBuilder->expr()->eq('category', $queryBuilder->createNamedParameter($row['category'])),
+                        $queryBuilder->expr()->eq('source_type', $queryBuilder->createNamedParameter($row['sourceType']))
+                    )
+                    ->setMaxResults(1)
+                    ->executeQuery()
+                    ->fetchAssociative();
+
+                if (is_array($existing) && isset($existing['uid'])) {
+                    $connection->update(
+                        'tx_consenti_domain_model_discovery',
+                        [
+                            'tstamp' => $now,
+                            'last_seen' => $now,
+                            'hits' => ((int)($existing['hits'] ?? 0)) + $hits,
+                            'last_source_url' => $row['lastSourceUrl'],
+                            'decision' => $row['decision'],
+                        ],
+                        ['uid' => (int)$existing['uid']]
+                    );
+                    continue;
+                }
+
+                $connection->insert(
+                    'tx_consenti_domain_model_discovery',
+                    [
+                        'pid' => $pid,
+                        'tstamp' => $now,
+                        'crdate' => $now,
+                        'cruser_id' => 0,
+                        'deleted' => 0,
+                        'hidden' => 0,
+                        'sorting' => 0,
+                        'host' => $row['host'],
+                        'category' => $row['category'],
+                        'source_type' => $row['sourceType'],
+                        'last_source_url' => $row['lastSourceUrl'],
+                        'first_seen' => $now,
+                        'last_seen' => $now,
+                        'hits' => $hits,
+                        'decision' => $row['decision'],
+                    ]
+                );
+            }
+        } catch (\Throwable) {
+            // Scanner is best-effort and must never break frontend rendering.
+        }
+    }
+
+    private function getScannerPid(): int
+    {
+        $storagePids = $this->getConfiguredStoragePids();
+        if ($storagePids !== []) {
+            return (int)$storagePids[0];
+        }
+        return 0;
     }
 
     /**
