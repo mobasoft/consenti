@@ -39,6 +39,22 @@
   margin-top: 0.9rem;
 }
 
+.consenti-branding {
+  margin-top: 0.6rem;
+  text-align: right;
+  font-size: 0.78rem;
+  opacity: 0.8;
+}
+
+.consenti-branding a {
+  color: var(--consenti-primary, #0d6efd);
+  text-decoration: none;
+}
+
+.consenti-branding a:hover {
+  text-decoration: underline;
+}
+
 .consenti-actions button {
   border: 1px solid var(--consenti-primary, #0d6efd);
   background: transparent;

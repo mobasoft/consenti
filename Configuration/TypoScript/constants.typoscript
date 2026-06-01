@@ -2,6 +2,7 @@
 # customsubcategory=02_Banner=Banner
 # customsubcategory=03_FloatingButton=Floating Button
 # customsubcategory=04_Colors=Colors
+# customsubcategory=05_Branding=Branding
 
 # cat=Consenti/01_General/10; type=string; label=Cookie name
 plugin.tx_consenti.cookieName = consenti_consent
@@ -59,3 +60,12 @@ plugin.tx_consenti.colors.placeholderBackground = #f8f9fa
 
 # cat=Consenti/04_Colors/70; type=string; label=Placeholder border color (hex)
 plugin.tx_consenti.colors.placeholderBorder = #d0d7de
+
+# cat=Consenti/05_Branding/10; type=boolean; label=Show "by consenti" branding in banner
+plugin.tx_consenti.branding.enabled = 0
+
+# cat=Consenti/05_Branding/20; type=string; label=Branding text
+plugin.tx_consenti.branding.text = by consenti
+
+# cat=Consenti/05_Branding/30; type=string; label=Branding URL
+plugin.tx_consenti.branding.url = https://github.com/mobasoft/consenti

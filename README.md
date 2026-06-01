@@ -97,6 +97,11 @@ plugin.tx_consenti {
     placeholderBackground = #f8f9fa
     placeholderBorder = #d0d7de
   }
+  branding {
+    enabled = 0
+    text = by consenti
+    url = https://github.com/mobasoft/consenti
+  }
   position = bottom
   fab {
     position = left
@@ -154,6 +159,10 @@ Color behavior:
     - `colors.buttonTextOnAccent`
     - `colors.placeholderBackground`
     - `colors.placeholderBorder`
+
+Optional branding footer:
+- `branding.enabled = 1` enables a small footer link in the consent banner
+- `branding.text` and `branding.url` define label and target
 
 ## Consent Cookie Format
 

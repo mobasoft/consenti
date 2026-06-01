@@ -107,6 +107,14 @@
     };
   }
 
+  function getBrandingConfig(root) {
+    return {
+      enabled: (root.getAttribute("data-branding-enabled") || "0") === "1",
+      text: root.getAttribute("data-branding-text") || "by consenti",
+      url: root.getAttribute("data-branding-url") || "https://github.com/mobasoft/consenti"
+    };
+  }
+
   function labelForCategory(category, i18n) {
     return category === "statistics" ? i18n.optionStatistics : i18n.optionMarketing;
   }
@@ -154,15 +162,15 @@
     });
   }
 
-  function openConsentDialog(cookieName, privacyUrl, colors, bannerPosition, i18n, revision) {
+  function openConsentDialog(cookieName, privacyUrl, colors, bannerPosition, i18n, revision, branding) {
     if (document.querySelector(".consenti-banner")) {
       return;
     }
     var currentConsent = parseCookie(cookieName);
-    buildBanner(cookieName, privacyUrl, colors, currentConsent, bannerPosition, i18n, revision);
+    buildBanner(cookieName, privacyUrl, colors, currentConsent, bannerPosition, i18n, revision, branding);
   }
 
-  function buildBanner(cookieName, privacyUrl, colors, consent, bannerPosition, i18n, revision) {
+  function buildBanner(cookieName, privacyUrl, colors, consent, bannerPosition, i18n, revision, branding) {
     var banner = document.createElement("aside");
     banner.className = "consenti-banner";
     if (bannerPosition === "top") {
@@ -198,6 +206,14 @@
       i18n.actionAll +
       "</button>" +
       "</div>";
+    if (branding.enabled) {
+      banner.innerHTML +=
+        '<div class="consenti-branding"><a href="' +
+        branding.url +
+        '" target="_blank" rel="noopener noreferrer">' +
+        branding.text +
+        "</a></div>";
+    }
 
     banner.style.setProperty("--consenti-primary", colors.primary);
     banner.style.setProperty("--consenti-text", colors.text);
@@ -247,7 +263,7 @@
     return banner;
   }
 
-  function mountRevokeButton(cookieName, privacyUrl, colors, fabConfig, bannerPosition, i18n, revision) {
+  function mountRevokeButton(cookieName, privacyUrl, colors, fabConfig, bannerPosition, i18n, revision, branding) {
     var button = document.createElement("button");
     button.className = "consenti-fab";
     button.type = "button";
@@ -271,11 +287,11 @@
     document.body.appendChild(button);
 
     button.addEventListener("click", function () {
-      openConsentDialog(cookieName, privacyUrl, colors, bannerPosition, i18n, revision);
+      openConsentDialog(cookieName, privacyUrl, colors, bannerPosition, i18n, revision, branding);
     });
   }
 
-  function mountEmbedActions(cookieName, privacyUrl, colors, bannerPosition, i18n, revision) {
+  function mountEmbedActions(cookieName, privacyUrl, colors, bannerPosition, i18n, revision, branding) {
     document.addEventListener("click", function (event) {
       var allowButton = event.target.closest("[data-consenti-allow-category]");
       if (allowButton) {
@@ -289,7 +305,7 @@
 
       var settingsButton = event.target.closest("[data-consenti-open-settings]");
       if (settingsButton) {
-        openConsentDialog(cookieName, privacyUrl, colors, bannerPosition, i18n, revision);
+        openConsentDialog(cookieName, privacyUrl, colors, bannerPosition, i18n, revision, branding);
       }
     });
   }
@@ -329,6 +345,7 @@
     var fabConfig = getFabConfig(root);
     var bannerPosition = getBannerPosition(root);
     var i18n = getI18n(root);
+    var branding = getBrandingConfig(root);
     var revision = root.getAttribute("data-consent-revision") || "";
     var forceReconsent = (root.getAttribute("data-force-reconsent") || "1") === "1";
     var consent = parseCookie(cookieName);
@@ -336,15 +353,15 @@
       consent = null;
       document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax";
     }
-    mountRevokeButton(cookieName, privacyUrl, colors, fabConfig, bannerPosition, i18n, revision);
-    mountEmbedActions(cookieName, privacyUrl, colors, bannerPosition, i18n, revision);
+    mountRevokeButton(cookieName, privacyUrl, colors, fabConfig, bannerPosition, i18n, revision, branding);
+    mountEmbedActions(cookieName, privacyUrl, colors, bannerPosition, i18n, revision, branding);
     localizeEmbedPlaceholders(i18n);
     if (consent) {
       loadApprovedScripts(consent);
       return;
     }
 
-    buildBanner(cookieName, privacyUrl, colors, consent, bannerPosition, i18n, revision);
+    buildBanner(cookieName, privacyUrl, colors, consent, bannerPosition, i18n, revision, branding);
   }
 
   window.addEventListener("load", function () {
