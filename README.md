@@ -170,3 +170,21 @@ Matching behavior:
 - PHP classes are strict-typed.
 - Middleware only modifies `text/html` frontend responses.
 - Internal/local scripts and iframes are not touched.
+
+## Smoke Test Checklist
+
+Quick manual validation after changes:
+
+1. Open a page with external media (e.g. YouTube embed).
+2. Without consent cookie:
+   - external iframe/script is blocked
+   - placeholder is visible
+3. With `statistics=true` and `marketing=false`:
+   - marketing embeds stay blocked
+4. With `statistics=true` and `marketing=true`:
+   - blocked embeds are loaded/restored
+5. Set `plugin.tx_consenti.cookieName` to a custom value:
+   - banner still stores consent
+   - middleware reads the configured cookie and unblocks correctly
+6. Set `plugin.tx_consenti.position = top`:
+   - banner is rendered at top, not bottom
