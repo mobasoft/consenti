@@ -93,6 +93,15 @@
       <trans-unit id="backend.discovery.field.lastSourceUrl">
         <source>Last source URL</source>
       </trans-unit>
+      <trans-unit id="backend.consentStat.title"><source>Consenti Consent Statistics</source></trans-unit>
+      <trans-unit id="backend.consentStat.field.dateKey"><source>Date</source></trans-unit>
+      <trans-unit id="backend.consentStat.field.revision"><source>Revision</source></trans-unit>
+      <trans-unit id="backend.consentStat.field.necessary"><source>Necessary</source></trans-unit>
+      <trans-unit id="backend.consentStat.field.statistics"><source>Statistics</source></trans-unit>
+      <trans-unit id="backend.consentStat.field.marketing"><source>Marketing</source></trans-unit>
+      <trans-unit id="backend.consentStat.field.hits"><source>Hits</source></trans-unit>
+      <trans-unit id="backend.consentStat.field.firstSeen"><source>First seen</source></trans-unit>
+      <trans-unit id="backend.consentStat.field.lastSeen"><source>Last seen</source></trans-unit>
     </body>
   </file>
 </xliff>

@@ -85,6 +85,8 @@ plugin.tx_consenti {
   privacyPage =
   privacyUrl = /datenschutz
   storagePid =
+  consentRevision = 1
+  forceReconsentOnRevisionChange = 1
   position = bottom
   fab {
     position = left
@@ -119,6 +121,12 @@ Floating cookie button (`fab`) options:
 
 Service-rule scope:
 - `storagePid`: comma-separated PID list for service-rule records (empty = all records)
+
+Consent lifecycle:
+- `consentRevision`: arbitrary revision identifier for consent text/vendor set (e.g. `2026-06`)
+- `forceReconsentOnRevisionChange`:
+  - `1` = existing cookie becomes invalid when revision changes
+  - `0` = keep existing cookie despite revision change
 
 ## Consent Cookie Format
 
@@ -172,6 +180,27 @@ ddev typo3 consenti:discovery:cleanup --days=30
 
 # Remove all discovery records
 ddev typo3 consenti:discovery:cleanup --all
+```
+
+Consent stats logging:
+- Aggregated page-request logging by day + revision + consent state
+- Table: `tx_consenti_domain_model_consent_stat`
+- Fields: `date_key`, `revision`, `necessary`, `statistics`, `marketing`, `hits`, `first_seen`, `last_seen`
+
+Cleanup command:
+
+```bash
+# Delete consent stats older than 365 days (default)
+ddev typo3 consenti:consent-stats:cleanup
+
+# Preview only
+ddev typo3 consenti:consent-stats:cleanup --dry-run
+
+# Custom threshold
+ddev typo3 consenti:consent-stats:cleanup --days=90
+
+# Remove all consent stats records
+ddev typo3 consenti:consent-stats:cleanup --all
 ```
 
 ## Roadmap

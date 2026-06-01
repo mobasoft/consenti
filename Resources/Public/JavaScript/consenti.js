@@ -26,6 +26,15 @@
       "; path=/; SameSite=Lax";
   }
 
+  function normalizeConsent(consent, revision) {
+    return {
+      necessary: true,
+      statistics: !!(consent && consent.statistics),
+      marketing: !!(consent && consent.marketing),
+      revision: revision || ""
+    };
+  }
+
   function getThemeColors() {
     var styles = getComputedStyle(document.documentElement);
     var primary = styles.getPropertyValue("--bs-primary").trim() || "#0d6efd";
@@ -116,15 +125,15 @@
     });
   }
 
-  function openConsentDialog(cookieName, privacyUrl, colors, bannerPosition, i18n) {
+  function openConsentDialog(cookieName, privacyUrl, colors, bannerPosition, i18n, revision) {
     if (document.querySelector(".consenti-banner")) {
       return;
     }
     var currentConsent = parseCookie(cookieName);
-    buildBanner(cookieName, privacyUrl, colors, currentConsent, bannerPosition, i18n);
+    buildBanner(cookieName, privacyUrl, colors, currentConsent, bannerPosition, i18n, revision);
   }
 
-  function buildBanner(cookieName, privacyUrl, colors, consent, bannerPosition, i18n) {
+  function buildBanner(cookieName, privacyUrl, colors, consent, bannerPosition, i18n, revision) {
     var banner = document.createElement("aside");
     banner.className = "consenti-banner";
     if (bannerPosition === "top") {
@@ -196,11 +205,10 @@
         marketing.checked = false;
       }
 
-      var nextConsent = {
-        necessary: true,
+      var nextConsent = normalizeConsent({
         statistics: statistics.checked,
         marketing: marketing.checked
-      };
+      }, revision);
       saveCookie(cookieName, nextConsent);
       loadApprovedScripts(nextConsent);
       banner.remove();
@@ -209,7 +217,7 @@
     return banner;
   }
 
-  function mountRevokeButton(cookieName, privacyUrl, colors, fabConfig, bannerPosition, i18n) {
+  function mountRevokeButton(cookieName, privacyUrl, colors, fabConfig, bannerPosition, i18n, revision) {
     var button = document.createElement("button");
     button.className = "consenti-fab";
     button.type = "button";
@@ -233,21 +241,16 @@
     document.body.appendChild(button);
 
     button.addEventListener("click", function () {
-      openConsentDialog(cookieName, privacyUrl, colors, bannerPosition, i18n);
+      openConsentDialog(cookieName, privacyUrl, colors, bannerPosition, i18n, revision);
     });
   }
 
-  function mountEmbedActions(cookieName, privacyUrl, colors, bannerPosition, i18n) {
+  function mountEmbedActions(cookieName, privacyUrl, colors, bannerPosition, i18n, revision) {
     document.addEventListener("click", function (event) {
       var allowButton = event.target.closest("[data-consenti-allow-category]");
       if (allowButton) {
         var category = allowButton.getAttribute("data-consenti-allow-category");
-        var consent = parseCookie(cookieName) || {
-          necessary: true,
-          statistics: false,
-          marketing: false
-        };
-        consent.necessary = true;
+        var consent = normalizeConsent(parseCookie(cookieName), revision);
         consent[category] = true;
         saveCookie(cookieName, consent);
         loadApprovedScripts(consent);
@@ -256,7 +259,7 @@
 
       var settingsButton = event.target.closest("[data-consenti-open-settings]");
       if (settingsButton) {
-        openConsentDialog(cookieName, privacyUrl, colors, bannerPosition, i18n);
+        openConsentDialog(cookieName, privacyUrl, colors, bannerPosition, i18n, revision);
       }
     });
   }
@@ -295,16 +298,22 @@
     var fabConfig = getFabConfig(root);
     var bannerPosition = getBannerPosition(root);
     var i18n = getI18n(root);
+    var revision = root.getAttribute("data-consent-revision") || "";
+    var forceReconsent = (root.getAttribute("data-force-reconsent") || "1") === "1";
     var consent = parseCookie(cookieName);
-    mountRevokeButton(cookieName, privacyUrl, colors, fabConfig, bannerPosition, i18n);
-    mountEmbedActions(cookieName, privacyUrl, colors, bannerPosition, i18n);
+    if (consent && forceReconsent && revision && consent.revision !== revision) {
+      consent = null;
+      document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax";
+    }
+    mountRevokeButton(cookieName, privacyUrl, colors, fabConfig, bannerPosition, i18n, revision);
+    mountEmbedActions(cookieName, privacyUrl, colors, bannerPosition, i18n, revision);
     localizeEmbedPlaceholders(i18n);
     if (consent) {
       loadApprovedScripts(consent);
       return;
     }
 
-    buildBanner(cookieName, privacyUrl, colors, consent, bannerPosition, i18n);
+    buildBanner(cookieName, privacyUrl, colors, consent, bannerPosition, i18n, revision);
   }
 
   window.addEventListener("load", function () {

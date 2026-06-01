@@ -1,6 +1,8 @@
 plugin.tx_consenti {
   cookieName = {$plugin.tx_consenti.cookieName}
   storagePid = {$plugin.tx_consenti.storagePid}
+  consentRevision = {$plugin.tx_consenti.consentRevision}
+  forceReconsentOnRevisionChange = {$plugin.tx_consenti.forceReconsentOnRevisionChange}
 }
 
 page {
@@ -40,7 +42,7 @@ page {
     }
 
     30 = TEXT
-    30.value = " data-position="{$plugin.tx_consenti.position}" data-fab-position="{$plugin.tx_consenti.fab.position}" data-fab-bottom="{$plugin.tx_consenti.fab.bottom}" data-fab-offset-x="{$plugin.tx_consenti.fab.offsetX}" data-fab-z-index="{$plugin.tx_consenti.fab.zIndex}" data-l10n-banner-text="
+    30.value = " data-position="{$plugin.tx_consenti.position}" data-fab-position="{$plugin.tx_consenti.fab.position}" data-fab-bottom="{$plugin.tx_consenti.fab.bottom}" data-fab-offset-x="{$plugin.tx_consenti.fab.offsetX}" data-fab-z-index="{$plugin.tx_consenti.fab.zIndex}" data-consent-revision="{$plugin.tx_consenti.consentRevision}" data-force-reconsent="{$plugin.tx_consenti.forceReconsentOnRevisionChange}" data-l10n-banner-text="
 
     40 = TEXT
     40.data = LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:consent.banner.text

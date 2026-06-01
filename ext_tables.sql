@@ -44,3 +44,28 @@ CREATE TABLE tx_consenti_domain_model_discovery (
     KEY host_lookup (host(191)),
     KEY source_lookup (source_type, category)
 );
+
+CREATE TABLE tx_consenti_domain_model_consent_stat (
+    uid int(11) NOT NULL auto_increment,
+    pid int(11) DEFAULT '0' NOT NULL,
+
+    tstamp int(11) unsigned DEFAULT '0' NOT NULL,
+    crdate int(11) unsigned DEFAULT '0' NOT NULL,
+    cruser_id int(11) unsigned DEFAULT '0' NOT NULL,
+    deleted tinyint(4) unsigned DEFAULT '0' NOT NULL,
+    hidden tinyint(4) unsigned DEFAULT '0' NOT NULL,
+    sorting int(11) DEFAULT '0' NOT NULL,
+
+    date_key varchar(10) DEFAULT '' NOT NULL,
+    revision varchar(64) DEFAULT '' NOT NULL,
+    necessary tinyint(4) unsigned DEFAULT '1' NOT NULL,
+    statistics tinyint(4) unsigned DEFAULT '0' NOT NULL,
+    marketing tinyint(4) unsigned DEFAULT '0' NOT NULL,
+    hits int(11) unsigned DEFAULT '0' NOT NULL,
+    first_seen int(11) unsigned DEFAULT '0' NOT NULL,
+    last_seen int(11) unsigned DEFAULT '0' NOT NULL,
+
+    PRIMARY KEY (uid),
+    KEY parent (pid),
+    KEY consent_lookup (date_key, revision, statistics, marketing)
+);

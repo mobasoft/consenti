@@ -44,6 +44,8 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
         }
 
         $consent = $this->getConsentFromCookie($request);
+        $consent = $this->validateConsentRevision($consent);
+        $this->logConsentState($consent);
         $allConsented = !empty($consent['marketing']) && !empty($consent['statistics']);
 
         $html = (string)$response->getBody();
@@ -500,5 +502,113 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
         }
         $cookieName = trim((string)($setup['cookieName'] ?? ''));
         return $cookieName !== '' ? $cookieName : 'consenti_consent';
+    }
+
+    private function validateConsentRevision(array $consent): array
+    {
+        if ($consent === []) {
+            return [];
+        }
+        $configuredRevision = $this->getConfiguredConsentRevision();
+        if ($configuredRevision === '') {
+            return $consent;
+        }
+        if (!$this->isForceReconsentOnRevisionChangeEnabled()) {
+            return $consent;
+        }
+        $cookieRevision = trim((string)($consent['revision'] ?? ''));
+        return $cookieRevision === $configuredRevision ? $consent : [];
+    }
+
+    private function getConfiguredConsentRevision(): string
+    {
+        if (!isset($GLOBALS['TSFE']) || !is_object($GLOBALS['TSFE']) || !isset($GLOBALS['TSFE']->tmpl)) {
+            return '';
+        }
+        $setup = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_consenti.'] ?? null;
+        if (!is_array($setup)) {
+            return '';
+        }
+        return trim((string)($setup['consentRevision'] ?? ''));
+    }
+
+    private function isForceReconsentOnRevisionChangeEnabled(): bool
+    {
+        if (!isset($GLOBALS['TSFE']) || !is_object($GLOBALS['TSFE']) || !isset($GLOBALS['TSFE']->tmpl)) {
+            return true;
+        }
+        $setup = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_consenti.'] ?? null;
+        if (!is_array($setup)) {
+            return true;
+        }
+        return (string)($setup['forceReconsentOnRevisionChange'] ?? '1') !== '0';
+    }
+
+    private function logConsentState(array $consent): void
+    {
+        try {
+            $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+                ->getConnectionForTable('tx_consenti_domain_model_consent_stat');
+            $dateKey = date('Y-m-d');
+            $revision = $this->getConfiguredConsentRevision();
+            $necessary = 1;
+            $statistics = !empty($consent['statistics']) ? 1 : 0;
+            $marketing = !empty($consent['marketing']) ? 1 : 0;
+            $now = time();
+            $pid = $this->getScannerPid();
+
+            $queryBuilder = $connection->createQueryBuilder();
+            $existing = $queryBuilder
+                ->select('uid', 'hits')
+                ->from('tx_consenti_domain_model_consent_stat')
+                ->where(
+                    $queryBuilder->expr()->eq('deleted', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)),
+                    $queryBuilder->expr()->eq('hidden', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)),
+                    $queryBuilder->expr()->eq('date_key', $queryBuilder->createNamedParameter($dateKey)),
+                    $queryBuilder->expr()->eq('revision', $queryBuilder->createNamedParameter($revision)),
+                    $queryBuilder->expr()->eq('necessary', $queryBuilder->createNamedParameter($necessary, ParameterType::INTEGER)),
+                    $queryBuilder->expr()->eq('statistics', $queryBuilder->createNamedParameter($statistics, ParameterType::INTEGER)),
+                    $queryBuilder->expr()->eq('marketing', $queryBuilder->createNamedParameter($marketing, ParameterType::INTEGER))
+                )
+                ->setMaxResults(1)
+                ->executeQuery()
+                ->fetchAssociative();
+
+            if (is_array($existing) && isset($existing['uid'])) {
+                $connection->update(
+                    'tx_consenti_domain_model_consent_stat',
+                    [
+                        'tstamp' => $now,
+                        'last_seen' => $now,
+                        'hits' => ((int)($existing['hits'] ?? 0)) + 1,
+                    ],
+                    ['uid' => (int)$existing['uid']]
+                );
+                return;
+            }
+
+            $connection->insert(
+                'tx_consenti_domain_model_consent_stat',
+                [
+                    'pid' => $pid,
+                    'tstamp' => $now,
+                    'crdate' => $now,
+                    'cruser_id' => 0,
+                    'deleted' => 0,
+                    'hidden' => 0,
+                    'sorting' => 0,
+                    'date_key' => $dateKey,
+                    'revision' => $revision,
+                    'necessary' => $necessary,
+                    'statistics' => $statistics,
+                    'marketing' => $marketing,
+                    'hits' => 1,
+                    'first_seen' => $now,
+                    'last_seen' => $now,
+                ]
+            );
+        } catch (\Throwable) {
+            // Consent stats are best-effort and must never break frontend rendering.
+        }
     }
 }

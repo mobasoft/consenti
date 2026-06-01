@@ -123,6 +123,15 @@
         <source>Last source URL</source>
         <target>Letzte Quell-URL</target>
       </trans-unit>
+      <trans-unit id="backend.consentStat.title"><source>Consenti Consent Statistics</source><target>Consenti Consent-Statistik</target></trans-unit>
+      <trans-unit id="backend.consentStat.field.dateKey"><source>Date</source><target>Datum</target></trans-unit>
+      <trans-unit id="backend.consentStat.field.revision"><source>Revision</source><target>Revision</target></trans-unit>
+      <trans-unit id="backend.consentStat.field.necessary"><source>Necessary</source><target>Notwendig</target></trans-unit>
+      <trans-unit id="backend.consentStat.field.statistics"><source>Statistics</source><target>Statistik</target></trans-unit>
+      <trans-unit id="backend.consentStat.field.marketing"><source>Marketing</source><target>Marketing</target></trans-unit>
+      <trans-unit id="backend.consentStat.field.hits"><source>Hits</source><target>Treffer</target></trans-unit>
+      <trans-unit id="backend.consentStat.field.firstSeen"><source>First seen</source><target>Erstmalig gesehen</target></trans-unit>
+      <trans-unit id="backend.consentStat.field.lastSeen"><source>Last seen</source><target>Zuletzt gesehen</target></trans-unit>
     </body>
   </file>
 </xliff>
