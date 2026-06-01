@@ -279,7 +279,7 @@ ddev typo3 consenti:consent-stats:cleanup --all
 
 ### Stage 2: v1 (current)
 
-- TYPO3 13-only baseline
+- TYPO3 14 baseline
 - Script + iFrame auto-blocking in middleware
 - Category-based deferred loading for blocked assets
 
@@ -299,7 +299,7 @@ ddev typo3 consenti:consent-stats:cleanup --all
 
 ## Development Notes
 
-- TYPO3 target: `^13.4`
+- TYPO3 target: `^14.0`
 - PHP classes are strict-typed.
 - Middleware only modifies `text/html` frontend responses.
 - Internal/local scripts and iframes are not touched.
