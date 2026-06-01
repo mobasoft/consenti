@@ -34,6 +34,12 @@ plugin.tx_consenti.fab.position = left
 # cat=Consenti/03_FloatingButton/15; type=boolean; label=Show floating cookie settings button
 plugin.tx_consenti.fab.enabled = 1
 
+# cat=Consenti/03_FloatingButton/16; type=options[gear,cookie,shield]; label=Floating button icon preset
+plugin.tx_consenti.fab.iconPreset = gear
+
+# cat=Consenti/03_FloatingButton/17; type=string; label=Custom icon HTML/entity (overrides preset when non-empty)
+plugin.tx_consenti.fab.customIconHtml =
+
 # cat=Consenti/03_FloatingButton/20; type=string; label=Floating button bottom offset (e.g. 1rem)
 plugin.tx_consenti.fab.bottom = 1rem
 

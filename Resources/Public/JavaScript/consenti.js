@@ -80,11 +80,27 @@
     }
     return {
       enabled: enabled,
+      icon: (root.getAttribute("data-fab-icon-preset") || "gear").toLowerCase(),
+      customIcon: root.getAttribute("data-fab-custom-icon-html") || "",
       position: position,
       bottom: root.getAttribute("data-fab-bottom") || "1rem",
       offsetX: root.getAttribute("data-fab-offset-x") || "1rem",
       zIndex: root.getAttribute("data-fab-z-index") || "9990"
     };
+  }
+
+  function resolveFabIconMarkup(fabConfig) {
+    var customIcon = String(fabConfig.customIcon || "").trim();
+    if (customIcon !== "") {
+      return customIcon;
+    }
+    if (fabConfig.icon === "cookie") {
+      return "🍪";
+    }
+    if (fabConfig.icon === "shield") {
+      return "🛡";
+    }
+    return "⚙";
   }
 
   function getBannerPosition(root) {
@@ -271,7 +287,7 @@
     button.type = "button";
     button.setAttribute("aria-label", i18n.settings);
     button.title = i18n.settings;
-    button.innerHTML = "⚙";
+    button.innerHTML = resolveFabIconMarkup(fabConfig);
     button.style.setProperty("--consenti-primary", colors.primary);
     button.style.bottom = fabConfig.bottom;
     button.style.zIndex = fabConfig.zIndex;
