@@ -267,7 +267,7 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
 
         foreach ($rows as $row) {
             $domains = array_values(array_filter(array_map(
-                static fn(string $domain): string => strtolower(trim($domain)),
+                fn(string $domain): string => $this->normalizeDomain($domain),
                 preg_split('/[\s,]+/', (string)($row['domains'] ?? ''), -1, PREG_SPLIT_NO_EMPTY) ?: []
             )));
             if ($domains === []) {
@@ -285,6 +285,21 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
                 'blacklist' => (bool)($row['blacklist'] ?? false),
             ];
         }
+    }
+
+    private function normalizeDomain(string $domain): string
+    {
+        $value = strtolower(trim($domain));
+        $value = trim($value, '.');
+        if ($value === '' || str_contains($value, '/')) {
+            return '';
+        }
+
+        if (!preg_match('/^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/', $value)) {
+            return '';
+        }
+
+        return $value;
     }
 
     /**

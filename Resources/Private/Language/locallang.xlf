@@ -39,6 +39,33 @@
       <trans-unit id="consent.placeholder.allow">
         <source>Load content ({category})</source>
       </trans-unit>
+      <trans-unit id="backend.serviceRules.title">
+        <source>Consenti Service Rules</source>
+      </trans-unit>
+      <trans-unit id="backend.serviceRules.field.title">
+        <source>Title</source>
+      </trans-unit>
+      <trans-unit id="backend.serviceRules.field.category">
+        <source>Category</source>
+      </trans-unit>
+      <trans-unit id="backend.serviceRules.category.statistics">
+        <source>Statistics</source>
+      </trans-unit>
+      <trans-unit id="backend.serviceRules.category.marketing">
+        <source>Marketing</source>
+      </trans-unit>
+      <trans-unit id="backend.serviceRules.field.whitelist">
+        <source>Whitelist (always allow matching domains)</source>
+      </trans-unit>
+      <trans-unit id="backend.serviceRules.field.blacklist">
+        <source>Blacklist (never allow matching domains)</source>
+      </trans-unit>
+      <trans-unit id="backend.serviceRules.field.domains">
+        <source>Domains</source>
+      </trans-unit>
+      <trans-unit id="backend.serviceRules.field.domains.description">
+        <source>One or multiple domains (comma, whitespace, or newline separated), e.g. youtube.com. Invalid entries are ignored.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

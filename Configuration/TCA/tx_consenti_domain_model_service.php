@@ -6,7 +6,7 @@ defined('TYPO3') or die();
 
 return [
     'ctrl' => [
-        'title' => 'Consenti Service Rules',
+        'title' => 'LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:backend.serviceRules.title',
         'label' => 'title',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
@@ -30,7 +30,7 @@ return [
     'columns' => [
         'hidden' => [
             'exclude' => true,
-            'label' => 'Hidden',
+            'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.hidden',
             'config' => [
                 'type' => 'check',
                 'renderType' => 'checkboxToggle',
@@ -39,7 +39,7 @@ return [
         ],
         'title' => [
             'exclude' => true,
-            'label' => 'Title',
+            'label' => 'LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:backend.serviceRules.field.title',
             'config' => [
                 'type' => 'input',
                 'size' => 50,
@@ -48,20 +48,20 @@ return [
         ],
         'category' => [
             'exclude' => true,
-            'label' => 'Category',
+            'label' => 'LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:backend.serviceRules.field.category',
             'config' => [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'items' => [
-                    ['Statistics', 'statistics'],
-                    ['Marketing', 'marketing'],
+                    ['LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:backend.serviceRules.category.statistics', 'statistics'],
+                    ['LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:backend.serviceRules.category.marketing', 'marketing'],
                 ],
                 'default' => 'marketing',
             ],
         ],
         'whitelist' => [
             'exclude' => true,
-            'label' => 'Whitelist (always allow matching domains)',
+            'label' => 'LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:backend.serviceRules.field.whitelist',
             'config' => [
                 'type' => 'check',
                 'renderType' => 'checkboxToggle',
@@ -70,7 +70,7 @@ return [
         ],
         'blacklist' => [
             'exclude' => true,
-            'label' => 'Blacklist (never allow matching domains)',
+            'label' => 'LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:backend.serviceRules.field.blacklist',
             'config' => [
                 'type' => 'check',
                 'renderType' => 'checkboxToggle',
@@ -79,8 +79,8 @@ return [
         ],
         'domains' => [
             'exclude' => true,
-            'label' => 'Domains',
-            'description' => 'One or multiple domains (comma, whitespace, or newline separated), e.g. youtube.com',
+            'label' => 'LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:backend.serviceRules.field.domains',
+            'description' => 'LLL:EXT:consenti/Resources/Private/Language/locallang.xlf:backend.serviceRules.field.domains.description',
             'config' => [
                 'type' => 'text',
                 'rows' => 6,

@@ -51,6 +51,42 @@
         <source>Load content ({category})</source>
         <target>Inhalt laden ({category})</target>
       </trans-unit>
+      <trans-unit id="backend.serviceRules.title">
+        <source>Consenti Service Rules</source>
+        <target>Consenti Service-Regeln</target>
+      </trans-unit>
+      <trans-unit id="backend.serviceRules.field.title">
+        <source>Title</source>
+        <target>Titel</target>
+      </trans-unit>
+      <trans-unit id="backend.serviceRules.field.category">
+        <source>Category</source>
+        <target>Kategorie</target>
+      </trans-unit>
+      <trans-unit id="backend.serviceRules.category.statistics">
+        <source>Statistics</source>
+        <target>Statistik</target>
+      </trans-unit>
+      <trans-unit id="backend.serviceRules.category.marketing">
+        <source>Marketing</source>
+        <target>Marketing</target>
+      </trans-unit>
+      <trans-unit id="backend.serviceRules.field.whitelist">
+        <source>Whitelist (always allow matching domains)</source>
+        <target>Whitelist (passende Domains immer erlauben)</target>
+      </trans-unit>
+      <trans-unit id="backend.serviceRules.field.blacklist">
+        <source>Blacklist (never allow matching domains)</source>
+        <target>Blacklist (passende Domains nie erlauben)</target>
+      </trans-unit>
+      <trans-unit id="backend.serviceRules.field.domains">
+        <source>Domains</source>
+        <target>Domains</target>
+      </trans-unit>
+      <trans-unit id="backend.serviceRules.field.domains.description">
+        <source>One or multiple domains (comma, whitespace, or newline separated), e.g. youtube.com. Invalid entries are ignored.</source>
+        <target>Eine oder mehrere Domains (durch Komma, Leerzeichen oder Zeilenumbruch getrennt), z. B. youtube.com. Ungültige Einträge werden ignoriert.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
