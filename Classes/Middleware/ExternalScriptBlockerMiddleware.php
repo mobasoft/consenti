@@ -13,6 +13,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Http\StreamFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
@@ -69,9 +70,9 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
             return $response;
         }
 
-        $response->getBody()->rewind();
-        $response->getBody()->write($updated);
-        return $response;
+        return $response->withBody(
+            GeneralUtility::makeInstance(StreamFactory::class)->createStream($updated)
+        );
     }
 
     private function maybeBlockIframe(DOMElement $iframe, string $currentHost, array $consent): void
