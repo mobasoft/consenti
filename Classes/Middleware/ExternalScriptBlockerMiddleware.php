@@ -341,11 +341,25 @@ final class ExternalScriptBlockerMiddleware implements MiddlewareInterface
 
     private function getConsentFromCookie(ServerRequestInterface $request): array
     {
-        $cookie = $request->getCookieParams()['consenti_consent'] ?? '';
+        $cookieName = $this->getConfiguredCookieName();
+        $cookie = $request->getCookieParams()[$cookieName] ?? '';
         if (!is_string($cookie) || $cookie === '') {
             return [];
         }
         $decoded = json_decode(rawurldecode($cookie), true);
         return is_array($decoded) ? $decoded : [];
+    }
+
+    private function getConfiguredCookieName(): string
+    {
+        if (!isset($GLOBALS['TSFE']) || !is_object($GLOBALS['TSFE']) || !isset($GLOBALS['TSFE']->tmpl)) {
+            return 'consenti_consent';
+        }
+        $setup = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_consenti.'] ?? null;
+        if (!is_array($setup)) {
+            return 'consenti_consent';
+        }
+        $cookieName = trim((string)($setup['cookieName'] ?? ''));
+        return $cookieName !== '' ? $cookieName : 'consenti_consent';
     }
 }

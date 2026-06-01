@@ -1,4 +1,5 @@
 plugin.tx_consenti {
+  cookieName = {$plugin.tx_consenti.cookieName}
   storagePid = {$plugin.tx_consenti.storagePid}
 }
 

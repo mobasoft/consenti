@@ -15,6 +15,11 @@
   font-size: 0.95rem;
 }
 
+.consenti-banner.consenti-banner-top {
+  top: 1rem;
+  bottom: auto;
+}
+
 .consenti-text a {
   color: var(--consenti-primary, #0d6efd);
 }

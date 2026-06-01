@@ -121,7 +121,7 @@ Example:
 
 ## Backend Service Rules
 
-Create records of type **Consenti Service Rules** (table `tx_consenti_domain_model_service`) in a sysfolder or regular page:
+Create records of type **Consenti Service Rules** (table `tx_consenti_domain_model_service`) in a sysfolder:
 
 - `Title`: internal name
 - `Category`: `statistics` or `marketing`
