@@ -73,11 +73,13 @@
   }
 
   function getFabConfig(root) {
+    var enabled = (root.getAttribute("data-fab-enabled") || "1") === "1";
     var position = (root.getAttribute("data-fab-position") || "left").toLowerCase();
     if (["left", "center", "right"].indexOf(position) === -1) {
       position = "left";
     }
     return {
+      enabled: enabled,
       position: position,
       bottom: root.getAttribute("data-fab-bottom") || "1rem",
       offsetX: root.getAttribute("data-fab-offset-x") || "1rem",
@@ -305,6 +307,9 @@
 
       var settingsButton = event.target.closest("[data-consenti-open-settings]");
       if (settingsButton) {
+        if (settingsButton.tagName === "A") {
+          event.preventDefault();
+        }
         openConsentDialog(cookieName, privacyUrl, colors, bannerPosition, i18n, revision, branding);
       }
     });
@@ -353,7 +358,9 @@
       consent = null;
       document.cookie = cookieName + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax";
     }
-    mountRevokeButton(cookieName, privacyUrl, colors, fabConfig, bannerPosition, i18n, revision, branding);
+    if (fabConfig.enabled) {
+      mountRevokeButton(cookieName, privacyUrl, colors, fabConfig, bannerPosition, i18n, revision, branding);
+    }
     mountEmbedActions(cookieName, privacyUrl, colors, bannerPosition, i18n, revision, branding);
     localizeEmbedPlaceholders(i18n);
     if (consent) {

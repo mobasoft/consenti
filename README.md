@@ -104,6 +104,7 @@ plugin.tx_consenti {
   }
   position = bottom
   fab {
+    enabled = 1
     position = left
     bottom = 1rem
     offsetX = 1rem
@@ -129,10 +130,20 @@ Resolution behavior:
 - TYPO3 page uid as numeric value (e.g. `123`)
 
 Floating cookie button (`fab`) options:
+- `enabled = 0|1` (default: `1`)
 - `position = left|center|right` (default: `left`)
 - `bottom` (e.g. `1rem`)
 - `offsetX` (horizontal offset for `left`/`right`)
 - `zIndex` (e.g. `9990`)
+
+If `fab.enabled = 0`, you can still open the consent dialog from any custom link/button by adding:
+- `data-consenti-open-settings="1"`
+
+Example:
+
+```html
+<a href="#" data-consenti-open-settings="1">Cookie settings</a>
+```
 
 Service-rule scope:
 - `storagePid`: comma-separated PID list for service-rule records (empty = all records)
