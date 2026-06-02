@@ -317,3 +317,9 @@ Quick manual validation after changes:
    - middleware reads the configured cookie and unblocks correctly
 6. Set `plugin.tx_consenti.position = top`:
    - banner is rendered at top, not bottom
+
+## Links
+
+- Issue tracker: https://github.com/mobasoft/consenti/issues
+- Repository: https://github.com/mobasoft/consenti
+- GitHub profile: https://github.com/mobasoft
