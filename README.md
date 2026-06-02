@@ -52,17 +52,17 @@ Custom TYPO3 cookie-consent extension for project-specific requirements.
 
 ## Extension Structure
 
-- `Classes/Middleware/ExternalScriptBlockerMiddleware.php`  
+- `Classes/Middleware/ExternalScriptBlockerMiddleware.php`
   Detects and blocks external scripts until consent is granted.
-- `Configuration/RequestMiddlewares.php`  
+- `Configuration/RequestMiddlewares.php`
   Registers middleware in TYPO3 frontend stack.
-- `Configuration/TypoScript/constants.typoscript`  
+- `Configuration/TypoScript/constants.typoscript`
   Basic configurable defaults.
-- `Configuration/TypoScript/setup.typoscript`  
+- `Configuration/TypoScript/setup.typoscript`
   Includes CSS/JS and renders banner root element.
-- `Resources/Public/JavaScript/consenti.js`  
+- `Resources/Public/JavaScript/consenti.js`
   Consent logic, cookie handling, banner UI, deferred script loading.
-- `Resources/Public/Css/consenti.css`  
+- `Resources/Public/Css/consenti.css`
   Banner, floating button, and blocked-content placeholder styling.
 
 ## Installation / Activation
@@ -321,3 +321,9 @@ Quick manual validation after changes:
    - middleware reads the configured cookie and unblocks correctly
 6. Set `plugin.tx_consenti.position = top`:
    - banner is rendered at top, not bottom
+
+## Links
+
+- Issue tracker: https://github.com/mobasoft/consenti/issues
+- Repository: https://github.com/mobasoft/consenti
+- GitHub profile: https://github.com/mobasoft
